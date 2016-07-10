@@ -6,12 +6,18 @@
 ## 使用
 将DPScrollNumberLabel文件夹中的两个文件复制进工程，在需要使用的地方导入头文件<br>
 ```Objective-c
+
+#import "DPScrollNumberLabel.h"
+
 @interface ViewController ()
 
 @property (nonatomic, strong)DPScrollNumberLabel *scrollLabel;
 
 @end
 
+```
+初始化的方法传人字体大小或是一个字体，不要设置其frame，只需改变其位置即可，因为它是根据字体大小自动计算自身的大小
+```Objective-c
 @implementation ViewController
 
 - (void)viewDidLoad {
@@ -26,3 +32,9 @@
 }
 @end
 ```
+当想要改变其数值时，调用下面方法即可,当animated参数为NO时不会播放动画
+```Objective-c
+[self.scrollLabel changeToNumber:@(10) animated:YES];
+```
+
+
