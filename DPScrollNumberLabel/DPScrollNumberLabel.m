@@ -367,6 +367,16 @@ static const CGFloat bufferModulus = 0.7f;
         if (animated) {
             [self playAnimationWithChange:number.integerValue - self.displayedNumber.integerValue displayNumber:number interval:interval];
             self.isAnimation = YES;
+        }else {
+            if (animated) {
+                [self playAnimationWithChange:number.integerValue - self.displayedNumber.integerValue displayNumber:number interval:interval];
+                self.isAnimation = YES;
+            }else {
+                NSArray<NSNumber *> *displayNumbers = [self getCellDisplayNumberWithNumber:number.integerValue];
+                for (int i = 0; i < displayNumbers.count; i++) {
+                    [self setScrollCell:self.cellArray[i] toNumber:displayNumbers[i].integerValue];
+                }
+            }
         }
     }
     self.displayedNumber = number;
