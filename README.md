@@ -4,3 +4,5 @@
 下面加一张效果图
 <br>
 ![image](https://github.com/948080952/DPScrollNumberLabel/blob/master/DPScrollNumber.gif) 
+## 使用
+
