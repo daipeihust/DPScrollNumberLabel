@@ -36,5 +36,9 @@
 ```Objective-c
 [self.scrollLabel changeToNumber:@(10) animated:YES];
 ```
+## 问题
+1.目前还不支持负数的显示
+2.动画时间的算法还有些问题
+3.显示的位数有限制，最大8位。
 
 
