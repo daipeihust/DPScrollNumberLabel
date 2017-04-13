@@ -15,7 +15,7 @@
 		F4629B691CF31859006B1173 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4629B671CF31859006B1173 /* LaunchScreen.storyboard */; };
 		F4629B741CF31859006B1173 /* DPScrollNumberLabelDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F4629B731CF31859006B1173 /* DPScrollNumberLabelDemoTests.m */; };
 		F4629B7F1CF31859006B1173 /* DPScrollNumberLabelDemoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = F4629B7E1CF31859006B1173 /* DPScrollNumberLabelDemoUITests.m */; };
-		F4629B8F1CF3192D006B1173 /* DPScrollNumberLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = F4629B8E1CF3192D006B1173 /* DPScrollNumberLabel.m */; };
+		F4E82CD71E9F1D44009ED0B1 /* DPScrollNumberLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = F4E82CD61E9F1D44009ED0B1 /* DPScrollNumberLabel.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,8 +52,8 @@
 		F4629B7A1CF31859006B1173 /* DPScrollNumberLabelDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DPScrollNumberLabelDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4629B7E1CF31859006B1173 /* DPScrollNumberLabelDemoUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DPScrollNumberLabelDemoUITests.m; sourceTree = "<group>"; };
 		F4629B801CF31859006B1173 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F4629B8D1CF3192D006B1173 /* DPScrollNumberLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DPScrollNumberLabel.h; sourceTree = "<group>"; };
-		F4629B8E1CF3192D006B1173 /* DPScrollNumberLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DPScrollNumberLabel.m; sourceTree = "<group>"; };
+		F4E82CD51E9F1D44009ED0B1 /* DPScrollNumberLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DPScrollNumberLabel.h; sourceTree = "<group>"; };
+		F4E82CD61E9F1D44009ED0B1 /* DPScrollNumberLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DPScrollNumberLabel.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,7 +104,7 @@
 		F4629B581CF31859006B1173 /* DPScrollNumberLabelDemo */ = {
 			isa = PBXGroup;
 			children = (
-				F4629B8C1CF31885006B1173 /* DPScrollNumberLabel */,
+				F4E82CD41E9F1D44009ED0B1 /* DPScrollNumberLabel */,
 				F4629B5C1CF31859006B1173 /* AppDelegate.h */,
 				F4629B5D1CF31859006B1173 /* AppDelegate.m */,
 				F4629B5F1CF31859006B1173 /* ViewController.h */,
@@ -144,13 +144,14 @@
 			path = DPScrollNumberLabelDemoUITests;
 			sourceTree = "<group>";
 		};
-		F4629B8C1CF31885006B1173 /* DPScrollNumberLabel */ = {
+		F4E82CD41E9F1D44009ED0B1 /* DPScrollNumberLabel */ = {
 			isa = PBXGroup;
 			children = (
-				F4629B8D1CF3192D006B1173 /* DPScrollNumberLabel.h */,
-				F4629B8E1CF3192D006B1173 /* DPScrollNumberLabel.m */,
+				F4E82CD51E9F1D44009ED0B1 /* DPScrollNumberLabel.h */,
+				F4E82CD61E9F1D44009ED0B1 /* DPScrollNumberLabel.m */,
 			);
 			name = DPScrollNumberLabel;
+			path = ../../DPScrollNumberLabel;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -283,7 +284,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F4629B8F1CF3192D006B1173 /* DPScrollNumberLabel.m in Sources */,
+				F4E82CD71E9F1D44009ED0B1 /* DPScrollNumberLabel.m in Sources */,
 				F4629B611CF31859006B1173 /* ViewController.m in Sources */,
 				F4629B5E1CF31859006B1173 /* AppDelegate.m in Sources */,
 				F4629B5B1CF31859006B1173 /* main.m in Sources */,
