@@ -9,26 +9,26 @@
 
 #import <UIKit/UIKit.h>
 
-typedef NS_ENUM(NSUInteger, SignType) {
-    SignTypeUnsigned, // only display positive number, default configuration is unsigned
-    SignTypeNormal, // negative numbers have negative sign but positive numbers don't have sign
-    SignTypeSigned // positive numbers have sign as well as negative numbers
+typedef NS_ENUM(NSUInteger, SignSetting) {
+    SignSettingUnsigned, // only display positive number, default configuration is unsigned
+    SignSettingNormal, // negative numbers have negative sign but positive numbers don't have sign
+    SignSettingSigned // positive numbers have sign as well as negative numbers
 };
 
 
 @interface DPScrollNumberLabel : UIView
 
-@property (nonatomic, strong)NSNumber *displayedNumber;
+@property (nonatomic, strong, readonly)NSNumber *displayedNumber;
 
 - (instancetype)initWithNumber:(NSNumber *)originNumber fontSize:(CGFloat)size;
 - (instancetype)initWithNumber:(NSNumber *)originNumber fontSize:(CGFloat)size textColor:(UIColor *)color;
-- (instancetype)initWithNumber:(NSNumber *)originNumber fontSize:(CGFloat)size signType:(SignType)signType;
-- (instancetype)initWithNumber:(NSNumber *)originNumber fontSize:(CGFloat)size textColor:(UIColor *)color signType:(SignType)signType;
+- (instancetype)initWithNumber:(NSNumber *)originNumber fontSize:(CGFloat)size signSetting:(SignSetting)signSetting;
+- (instancetype)initWithNumber:(NSNumber *)originNumber fontSize:(CGFloat)size textColor:(UIColor *)color signSetting:(SignSetting)signSetting;
 
 - (instancetype)initWithNumber:(NSNumber *)originNumber font:(UIFont *)font;
 - (instancetype)initWithNumber:(NSNumber *)originNumber font:(UIFont *)font textColor:(UIColor *)color;
-- (instancetype)initWithNumber:(NSNumber *)originNumber font:(UIFont *)font signType:(SignType)signType;
-- (instancetype)initWithNumber:(NSNumber *)originNumber font:(UIFont *)font textColor:(UIColor *)color signType:(SignType)signType;
+- (instancetype)initWithNumber:(NSNumber *)originNumber font:(UIFont *)font signSetting:(SignSetting)signSetting;
+- (instancetype)initWithNumber:(NSNumber *)originNumber font:(UIFont *)font textColor:(UIColor *)color signSetting:(SignSetting)signSetting;
 
 /********************************
  
@@ -49,13 +49,13 @@ typedef NS_ENUM(NSUInteger, SignType) {
 
 - (instancetype)initWithNumber:(NSNumber *)originNumber
                       fontSize:(CGFloat)size
-                      signType:(SignType)signType
+                      signSetting:(SignSetting)signSetting
                      rowNumber:(NSUInteger)rowNumber;
 
 - (instancetype)initWithNumber:(NSNumber *)originNumber
                       fontSize:(CGFloat)size
                      textColor:(UIColor *)color
-                      signType:(SignType)signType
+                      signSetting:(SignSetting)signSetting
                      rowNumber:(NSUInteger)rowNumber;
 
 - (instancetype)initWithNumber:(NSNumber *)originNumber
@@ -65,13 +65,13 @@ typedef NS_ENUM(NSUInteger, SignType) {
 
 - (instancetype)initWithNumber:(NSNumber *)originNumber
                           font:(UIFont *)font
-                      signType:(SignType)signType
+                      signSetting:(SignSetting)signSetting
                      rowNumber:(NSUInteger)rowNumber;
 
 - (instancetype)initWithNumber:(NSNumber *)originNumber
                           font:(UIFont *)font
                      textColor:(UIColor *)color
-                      signType:(SignType)signType
+                      signSetting:(SignSetting)signSetting
                      rowNumber:(NSUInteger)rowNumber;
 
 - (void)changeToNumber:(NSNumber *)number animated:(BOOL)animated;

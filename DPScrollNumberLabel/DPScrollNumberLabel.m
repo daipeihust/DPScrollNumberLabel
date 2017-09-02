@@ -28,25 +28,38 @@ typedef NS_ENUM(NSUInteger, ScrollAnimationDirection) {
     ScrollAnimationDirectionNumber
 };
 
-
+typedef NS_ENUM(NSUInteger, Sign) {
+    SignNegative = 0,
+    SignZero = 1, // when the display number is zero, there is no sign
+    SignPositive = 2
+};
 
 static const CGFloat normalModulus = 0.3f;
 static const CGFloat bufferModulus = 0.7f;
 
+static const NSUInteger numberCellLineCount = 11;
+static const NSUInteger signCellLineCount = 3;
+
+static NSString * const numberCellText = @"0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0";
+
 @interface DPScrollNumberLabel()
 
-@property (nonatomic, strong)NSMutableArray<UILabel *>  *cellArray;
-@property (nonatomic, assign)CGFloat                    fontSize; 
-@property (nonatomic, assign)NSUInteger                 rowNumber;
-@property (nonatomic, strong)NSMutableArray             *taskArray;
-@property (nonatomic, assign)BOOL                       isAnimating;
-@property (nonatomic, assign)CGFloat                    cellWidth;
-@property (nonatomic, assign)CGFloat                    cellHeight;
-@property (nonatomic, assign)NSInteger                  finishedAnimationCount;
-@property (nonatomic, assign)NSUInteger                 maxRowNumber;
-@property (nonatomic, strong)UIColor                    *textColor;
-@property (nonatomic, strong)UIFont                     *font;
-@property (nonatomic, assign)SignType                   signType;
+@property (nonatomic, strong, readwrite) NSNumber           *displayedNumber;
+@property (nonatomic, strong) NSMutableArray<UILabel *>     *cellArray;
+@property (nonatomic, strong) UILabel                       *signCell;
+@property (nonatomic, assign) CGFloat                       fontSize;
+@property (nonatomic, assign) NSUInteger                    numberRow;
+@property (nonatomic, strong) NSMutableArray                *taskArray;
+@property (nonatomic, assign) BOOL                          isAnimating;
+@property (nonatomic, assign) CGFloat                       cellWidth;
+@property (nonatomic, assign) CGFloat                       numberCellHeight;
+@property (nonatomic, assign) CGFloat                       signCellHeight;
+@property (nonatomic, assign) NSInteger                     finishedAnimationCount;
+@property (nonatomic, assign) NSUInteger                    maxRowNumber;
+@property (nonatomic, strong) UIColor                       *textColor;
+@property (nonatomic, strong) UIFont                        *font;
+@property (nonatomic, assign) SignSetting                   signSetting;
+@property (nonatomic, assign) NSUInteger                    signRow;
 
 @end
 
@@ -62,28 +75,28 @@ static const CGFloat bufferModulus = 0.7f;
     return [self initWithNumber:originNumber fontSize:size textColor:color rowNumber:0];
 }
 
-- (instancetype)initWithNumber:(NSNumber *)originNumber fontSize:(CGFloat)size signType:(SignType)signType {
-    return [self initWithNumber:originNumber fontSize:size textColor:[UIColor grayColor] signType:signType];
+- (instancetype)initWithNumber:(NSNumber *)originNumber fontSize:(CGFloat)size signSetting:(SignSetting)signSetting {
+    return [self initWithNumber:originNumber fontSize:size textColor:[UIColor grayColor] signSetting:signSetting];
 }
 
 - (instancetype)initWithNumber:(NSNumber *)originNumber fontSize:(CGFloat)size rowNumber:(NSUInteger)rowNumber {
     return [self initWithNumber:originNumber fontSize:size textColor:[UIColor grayColor] rowNumber:rowNumber];
 }
 
-- (instancetype)initWithNumber:(NSNumber *)originNumber fontSize:(CGFloat)size textColor:(UIColor *)color signType:(SignType)signType {
-    return [self initWithNumber:originNumber fontSize:size textColor:color signType:signType rowNumber:0];
+- (instancetype)initWithNumber:(NSNumber *)originNumber fontSize:(CGFloat)size textColor:(UIColor *)color signSetting:(SignSetting)signSetting {
+    return [self initWithNumber:originNumber fontSize:size textColor:color signSetting:signSetting rowNumber:0];
 }
 
 
 - (instancetype)initWithNumber:(NSNumber *)originNumber fontSize:(CGFloat)size textColor:(UIColor *)color rowNumber:(NSUInteger)rowNumber {
-    return [self initWithNumber:originNumber fontSize:size textColor:color signType:SignTypeUnsigned rowNumber:rowNumber];
+    return [self initWithNumber:originNumber fontSize:size textColor:color signSetting:SignSettingUnsigned rowNumber:rowNumber];
 }
 
-- (instancetype)initWithNumber:(NSNumber *)originNumber fontSize:(CGFloat)size signType:(SignType)signType rowNumber:(NSUInteger)rowNumber {
-    return [self initWithNumber:originNumber fontSize:size textColor:[UIColor grayColor] signType:signType rowNumber:rowNumber];
+- (instancetype)initWithNumber:(NSNumber *)originNumber fontSize:(CGFloat)size signSetting:(SignSetting)signSetting rowNumber:(NSUInteger)rowNumber {
+    return [self initWithNumber:originNumber fontSize:size textColor:[UIColor grayColor] signSetting:signSetting rowNumber:rowNumber];
 }
 
-- (instancetype)initWithNumber:(NSNumber *)originNumber fontSize:(CGFloat)size textColor:(UIColor *)color signType:(SignType)signType rowNumber:(NSUInteger)rowNumber {
+- (instancetype)initWithNumber:(NSNumber *)originNumber fontSize:(CGFloat)size textColor:(UIColor *)color signSetting:(SignSetting)signSetting rowNumber:(NSUInteger)rowNumber {
     self = [super init];
     if (self) {
         self.displayedNumber = originNumber;
@@ -91,9 +104,9 @@ static const CGFloat bufferModulus = 0.7f;
         self.textColor = color;
         self.isAnimating = NO;
         self.finishedAnimationCount = 0;
-        self.rowNumber = (rowNumber > 0 && rowNumber <= 8) ? rowNumber : 0;
-        self.maxRowNumber = (self.rowNumber == 0) ? 8 : rowNumber;
-        self.signType = signType;
+        self.numberRow = (rowNumber > 0 && rowNumber <= 8) ? rowNumber : 0;
+        self.maxRowNumber = (self.numberRow == 0) ? 8 : rowNumber;
+        self.signSetting = signSetting;
         [self commonInit];
     }
     return self;
@@ -107,23 +120,23 @@ static const CGFloat bufferModulus = 0.7f;
     return [self initWithNumber:originNumber font:font textColor:[UIColor grayColor] rowNumber:0];
 }
 
-- (instancetype)initWithNumber:(NSNumber *)originNumber font:(UIFont *)font signType:(SignType)signType {
-    return [self initWithNumber:originNumber font:font textColor:[UIColor grayColor] signType:signType rowNumber:0];
+- (instancetype)initWithNumber:(NSNumber *)originNumber font:(UIFont *)font signSetting:(SignSetting)signSetting {
+    return [self initWithNumber:originNumber font:font textColor:[UIColor grayColor] signSetting:signSetting rowNumber:0];
 }
 
-- (instancetype)initWithNumber:(NSNumber *)originNumber font:(UIFont *)font textColor:(UIColor *)color signType:(SignType)signType {
-    return [self initWithNumber:originNumber font:font textColor:color signType:signType rowNumber:0];
+- (instancetype)initWithNumber:(NSNumber *)originNumber font:(UIFont *)font textColor:(UIColor *)color signSetting:(SignSetting)signSetting {
+    return [self initWithNumber:originNumber font:font textColor:color signSetting:signSetting rowNumber:0];
 }
 
 - (instancetype)initWithNumber:(NSNumber *)originNumber font:(UIFont *)font textColor:(UIColor *)color rowNumber:(NSUInteger)rowNumber {
-    return [self initWithNumber:originNumber font:font textColor:color signType:SignTypeUnsigned rowNumber:rowNumber];
+    return [self initWithNumber:originNumber font:font textColor:color signSetting:SignSettingUnsigned rowNumber:rowNumber];
 }
 
-- (instancetype)initWithNumber:(NSNumber *)originNumber font:(UIFont *)font signType:(SignType)signType rowNumber:(NSUInteger)rowNumber {
-    return [self initWithNumber:originNumber font:font textColor:[UIColor grayColor] signType:signType rowNumber:rowNumber];
+- (instancetype)initWithNumber:(NSNumber *)originNumber font:(UIFont *)font signSetting:(SignSetting)signSetting rowNumber:(NSUInteger)rowNumber {
+    return [self initWithNumber:originNumber font:font textColor:[UIColor grayColor] signSetting:signSetting rowNumber:rowNumber];
 }
 
-- (instancetype)initWithNumber:(NSNumber *)originNumber font:(UIFont *)font textColor:(UIColor *)color signType:(SignType)signType rowNumber:(NSUInteger)rowNumber {
+- (instancetype)initWithNumber:(NSNumber *)originNumber font:(UIFont *)font textColor:(UIColor *)color signSetting:(SignSetting)signSetting rowNumber:(NSUInteger)rowNumber {
     self = [super init];
     if (self) {
         self.displayedNumber = originNumber;
@@ -131,99 +144,133 @@ static const CGFloat bufferModulus = 0.7f;
         self.textColor = color;
         self.isAnimating = NO;
         self.finishedAnimationCount = 0;
-        self.rowNumber = (rowNumber > 0 && rowNumber <= 8) ? rowNumber : 0;
-        self.maxRowNumber = (self.rowNumber == 0) ? 8 : rowNumber;
-        self.signType = signType;
+        self.numberRow = (rowNumber > 0 && rowNumber <= 8) ? rowNumber : 0;
+        self.maxRowNumber = (self.numberRow == 0) ? 8 : rowNumber;
+        self.signSetting = signSetting;
         [self commonInit];
     }
     return self;
+}
+
+- (void)commonInit {
+    [self initSign];
+    [self initCells];
+    [self initParent];
+}
+
+- (void)initSign {
+    switch (self.signSetting) {
+        case SignSettingUnsigned:
+            self.signRow = 0;
+            int displayedNumber = self.displayedNumber.intValue;
+            if (displayedNumber < 0) {
+                self.displayedNumber = @(abs(displayedNumber));
+            }
+            break;
+        case SignSettingSigned:
+        case SignSettingNormal:
+            self.signRow = 1;
+            break;
+        default:
+            break;
+    }
 }
 
 #pragma mark - ConfigViews
 
 - (void)initParent{
     
-    self.bounds = CGRectMake(0, 0, self.rowNumber * self.cellWidth, self.cellHeight / 11);
+    self.bounds = CGRectMake(0, 0, (self.numberRow + self.signRow) * self.cellWidth, self.numberCellHeight / numberCellLineCount);
     self.backgroundColor = [UIColor clearColor];
     self.layer.masksToBounds = YES;
     
-    [self layoutCell:self.rowNumber withAnimation:YES];
+//    [self layoutCell:self.numberRow withAnimation:YES];
     
 }
 
-- (void)initCell {
+- (void)initCells {
     int originNumber = self.displayedNumber.intValue;
     
-    if (self.rowNumber == 0) {
-        self.rowNumber = [self calculateRowNumber:originNumber];
+    if (self.numberRow == 0) {
+        self.numberRow = [self calculateNumberRow:originNumber];
     }
     
     self.cellArray = [[NSMutableArray alloc] init];
     
-    NSString *text = @"0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0";
-    CGRect rect = [text boundingRectWithSize:CGSizeZero
+    CGRect rect = [numberCellText boundingRectWithSize:CGSizeZero
                                      options:NSStringDrawingUsesLineFragmentOrigin
                                   attributes:@{NSFontAttributeName:self.font}
                                      context:nil];
     self.cellWidth = rect.size.width;
-    self.cellHeight = rect.size.height;
+    self.numberCellHeight = rect.size.height;
+    self.signCellHeight = rect.size.height * signCellLineCount / numberCellLineCount;
     
-    NSArray *displayNumberArray = [self getCellDisplayNumberWithNumber:self.displayedNumber.integerValue];
+    NSArray *displayNumberArray = [self getEachCellNumberArrayWithDisplayedNumber:self.displayedNumber.integerValue];
     
-    for (NSInteger i = 0; i < self.rowNumber; i++) {
-        UILabel *scrollCell = [self makeScrollCell];
-        scrollCell.frame = CGRectMake((self.rowNumber - 1 - i) * self.cellWidth, 0, self.cellWidth, self.cellHeight);
-        scrollCell.text = text;
+    for (NSInteger i = 0; i < self.numberRow; i++) {
+        UILabel *numberCell = [self makeNumberCell];
+        numberCell.frame = CGRectMake((self.numberRow + self.signRow - 1 - i) * self.cellWidth, 0, self.cellWidth, self.numberCellHeight);
         NSNumber *displayNum = [displayNumberArray objectAtIndex:i];
-        [self setScrollCell:scrollCell toNumber:displayNum.integerValue];
-        [self.cellArray addObject:scrollCell];
+        [self setNumberCell:numberCell toNumber:displayNum.integerValue];
+        [self addSubview:numberCell];
+        [self.cellArray addObject:numberCell];
     }
+    
+    self.signCell.frame = CGRectMake(0, 0, self.cellWidth, self.signCellHeight);
+    [self addSubview:self.signCell];
+    int displayedNumber = self.displayedNumber.intValue;
+    if (displayedNumber > 0) {
+        [self setSignCellToSign:SignPositive];
+    } else if (displayedNumber < 0) {
+        [self setSignCellToSign:SignNegative];
+    } else {
+        [self setSignCellToSign:SignZero];
+    }
+    
 }
 
-- (void)reInitCell:(NSInteger)rowNumber {
-    NSString *text = @"0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0";
+- (void)updateCellModelToFitRowNumber:(NSInteger)rowNumber {
     
-    if (rowNumber > self.rowNumber) {
-        for (NSInteger i = self.rowNumber; i < rowNumber; i++) {
-            UILabel *scrollCell = [self makeScrollCell];
-            scrollCell.frame = CGRectMake((self.rowNumber - 1 - i) * self.cellWidth, 0, self.cellWidth, self.cellHeight);
-            scrollCell.text = text;
+    if (rowNumber > self.numberRow) {
+        for (NSInteger i = self.numberRow; i < rowNumber; i++) {
+            UILabel *scrollCell = [self makeNumberCell];
+            scrollCell.frame = CGRectMake((self.numberRow + self.signRow - 1 - i) * self.cellWidth, 0, self.cellWidth, self.numberCellHeight);
             [self.cellArray addObject:scrollCell];
         }
     }else {
-        for (NSInteger i = rowNumber; i < self.rowNumber; i++) {
+        for (NSInteger i = rowNumber; i < self.numberRow; i++) {
             [self.cellArray removeLastObject];
         }
     }
 }
 
-- (void)layoutCell:(NSUInteger)rowNumber withAnimation:(BOOL)animated{
+- (void)updateCellLayoutToFitRowNumber:(NSUInteger)rowNumber withAnimation:(BOOL)animated{
     
-    for (UIView *subView in self.subviews) {
-        [subView removeFromSuperview];
+//    for (UIView *subView in self.subviews) {
+//        [subView removeFromSuperview];
+//    }
+    
+    if (rowNumber == self.numberRow) {
+        return ;
     }
     
+    [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     for (UILabel *cell in self.cellArray) {
         [self addSubview:cell];
     }
-    
-    if (rowNumber == self.rowNumber) {
-        return ;
-    }
     __weak typeof(self) weakSelf = self;
-    
-    [UIView animateWithDuration:0.2 * (rowNumber - self.rowNumber) animations:^{
+    [UIView animateWithDuration:0.2 * (rowNumber - self.numberRow) animations:^{
         for (int i = 0; i < rowNumber; i++) {
             UILabel *cell = [weakSelf.cellArray objectAtIndex:i];
-            cell.frame = CGRectMake((rowNumber - 1 - i) * weakSelf.cellWidth,
+            cell.frame = CGRectMake((rowNumber + self.signRow - 1 - i) * weakSelf.cellWidth,
                                     cell.frame.origin.y,
                                     weakSelf.cellWidth,
-                                    weakSelf.cellHeight);
+                                    weakSelf.numberCellHeight);
         }
         self.frame = CGRectMake(self.frame.origin.x,
                                 self.frame.origin.y,
-                                rowNumber * self.cellWidth,
-                                self.cellHeight/11);
+                                (rowNumber + self.signRow) * self.cellWidth,
+                                self.numberCellHeight/numberCellLineCount);
     } completion:nil];
 }
 
@@ -231,16 +278,16 @@ static const CGFloat bufferModulus = 0.7f;
 
 - (void)playAnimationWithChange:(NSInteger)changeNumber displayNumber:(NSNumber *)displayNumber interval:(CGFloat)interval{
     
-    NSInteger nextRowNumber = [self calculateRowNumber:displayNumber.intValue];
+    NSInteger nextRowNumber = [self calculateNumberRow:displayNumber.intValue];
     
-    if (nextRowNumber > self.rowNumber) {
-        [self reInitCell:nextRowNumber];
-        [self layoutCell:nextRowNumber withAnimation:YES];
-        self.rowNumber = nextRowNumber;
+    if (nextRowNumber > self.numberRow) {
+        [self updateCellModelToFitRowNumber:nextRowNumber];
+        [self updateCellLayoutToFitRowNumber:nextRowNumber withAnimation:YES];
+        self.numberRow = nextRowNumber;
     }
     
     NSArray *repeatCountArray = [self getRepeatTimesWithChangeNumber:changeNumber displayNumber:displayNumber.integerValue];
-    NSArray *willDisplayNums = [self getCellDisplayNumberWithNumber:displayNumber.integerValue];
+    NSArray *willDisplayNums = [self getEachCellNumberArrayWithDisplayedNumber:displayNumber.integerValue];
     
     if (interval == 0) {
         interval = [self getIntervalWithOriginalNumber:displayNumber.integerValue - changeNumber displayNumber:displayNumber.integerValue];
@@ -263,7 +310,7 @@ static const CGFloat bufferModulus = 0.7f;
             }else {
                 if (direction == ScrollAnimationDirectionUp) {
                     
-                    startDuration = interval * (10 - [self getDisplayNumberOfCell:cell]) / ceilf(fabs(changeNumber / pow(10, i)));
+                    startDuration = interval * (10 - [self getDisplayedNumberOfCell:cell]) / ceilf(fabs(changeNumber / pow(10, i)));
                     CGFloat cycleDuration = interval * 10 / fabs(changeNumber / pow(10, i));
                     if (repeatCount == 1) {
                         cycleDuration = 0;
@@ -277,7 +324,7 @@ static const CGFloat bufferModulus = 0.7f;
                                                 keyDisplayNumber:   willDisplayNum};
                     [self makeMultiAnimationWithCell:cell direction:direction animationCount:repeatCountArray.count attribute:attribute];
                 }else if (direction == ScrollAnimationDirectionDown) {
-                    startDuration = interval * ([self getDisplayNumberOfCell:cell] - 0) / ceilf(fabs(changeNumber / pow(10, i)));
+                    startDuration = interval * ([self getDisplayedNumberOfCell:cell] - 0) / ceilf(fabs(changeNumber / pow(10, i)));
                     CGFloat cycleDuration = interval * 10 / fabs(changeNumber / pow(10, i));
                     if (repeatCount == 1) {
                         cycleDuration = 0;
@@ -310,14 +357,14 @@ static const CGFloat bufferModulus = 0.7f;
     NSNumber *startDelay = [attribute objectForKey:keyStartDelay];
     
     [UIView animateWithDuration:startDuration.floatValue delay:startDelay.floatValue options:UIViewAnimationOptionCurveEaseIn animations:^{
-        [self setScrollCell:cell toNumber:(direction == ScrollAnimationDirectionUp)?10 : 0];
+        [self setNumberCell:cell toNumber:(direction == ScrollAnimationDirectionUp)?10 : 0];
     } completion:^(BOOL finished) {
         NSLog(@"start animation finish!");
-        [self setScrollCell:cell toNumber:(direction == ScrollAnimationDirectionUp)?0 : 10];
+        [self setNumberCell:cell toNumber:(direction == ScrollAnimationDirectionUp)?0 : 10];
         
         if (cycleDuration.floatValue == 0) {
             [UIView animateWithDuration:endDuration.floatValue delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-                [self setScrollCell:cell toNumber:willDisplayNum.integerValue];
+                [self setNumberCell:cell toNumber:willDisplayNum.integerValue];
             } completion:^(BOOL finished) {
                 [self checkTaskArrayWithAnimationCount:count];
                 NSLog(@"end animation finish!");
@@ -327,19 +374,19 @@ static const CGFloat bufferModulus = 0.7f;
                 [UIView setAnimationRepeatCount:repeatCount.integerValue];
                 switch (direction) {
                     case ScrollAnimationDirectionUp:
-                        [self setScrollCell:cell toNumber:10];
+                        [self setNumberCell:cell toNumber:10];
                         break;
                     case ScrollAnimationDirectionDown:
-                        [self setScrollCell:cell toNumber:0];
+                        [self setNumberCell:cell toNumber:0];
                         break;
                     default:
                         break;
                 }
             } completion:^(BOOL finished) {
                 NSLog(@"cycle animation finish!");
-                [self setScrollCell:cell toNumber:(direction == ScrollAnimationDirectionUp)?0 : 10];
+                [self setNumberCell:cell toNumber:(direction == ScrollAnimationDirectionUp)?0 : 10];
                 [UIView animateWithDuration:endDuration.floatValue delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-                    [self setScrollCell:cell toNumber:willDisplayNum.integerValue];
+                    [self setNumberCell:cell toNumber:willDisplayNum.integerValue];
                 } completion:^(BOOL finished) {
                     [self checkTaskArrayWithAnimationCount:count];
                     NSLog(@"end animation finish!");
@@ -352,7 +399,7 @@ static const CGFloat bufferModulus = 0.7f;
 - (void)makeSingleAnimationWithCell:(UILabel *)cell duration:(CGFloat)duration delay:(CGFloat)delay animationCount:(NSInteger)count displayNumber:(NSInteger)displayNumber{
     
     [UIView animateWithDuration:duration delay:delay options:UIViewAnimationOptionCurveEaseOut animations:^{
-        [self setScrollCell:cell toNumber:displayNumber];
+        [self setNumberCell:cell toNumber:displayNumber];
     } completion:^(BOOL finished) {
         [self checkTaskArrayWithAnimationCount:count];
         NSLog(@"single animation finish!");
@@ -389,7 +436,7 @@ static const CGFloat bufferModulus = 0.7f;
         return ;
     }
     
-    if ([self calculateRowNumber:number.integerValue] > self.maxRowNumber) {
+    if ([self calculateNumberRow:number.integerValue] > self.maxRowNumber) {
         return ;
     }
     
@@ -410,9 +457,9 @@ static const CGFloat bufferModulus = 0.7f;
                 [self playAnimationWithChange:number.integerValue - self.displayedNumber.integerValue displayNumber:number interval:interval];
                 self.isAnimating = YES;
             } else {
-                NSArray<NSNumber *> *displayNumbers = [self getCellDisplayNumberWithNumber:number.integerValue];
+                NSArray<NSNumber *> *displayNumbers = [self getEachCellNumberArrayWithDisplayedNumber:number.integerValue];
                 for (int i = 0; i < displayNumbers.count; i++) {
-                    [self setScrollCell:self.cellArray[i] toNumber:displayNumbers[i].integerValue];
+                    [self setNumberCell:self.cellArray[i] toNumber:displayNumbers[i].integerValue];
                 }
             }
         }
@@ -422,32 +469,27 @@ static const CGFloat bufferModulus = 0.7f;
 
 #pragma mark - Privite Method
 
-- (void)commonInit {
-    [self initCell];
-    [self initParent];
-}
 
-- (NSInteger)calculateRowNumber:(NSInteger)number {
-    NSInteger rowNumber = 1;
+
+- (NSInteger)calculateNumberRow:(NSInteger)number {
+    NSInteger numberRow = 1;
     while ((number = number / 10) != 0) {
-        rowNumber++;
+        numberRow++;
     }
-    return rowNumber;
+    return numberRow;
 }
 
-- (void)setScrollCell:(UILabel *)cell toNumber:(NSInteger)number {
-    CGFloat originX = cell.frame.origin.x;
-    CGFloat floatNumber = number;
-    CGFloat y = - ((CGFloat)floatNumber / 11) * self.cellHeight;
-    cell.frame = CGRectMake(originX, y, self.cellWidth, self.cellHeight);
+- (void)setNumberCell:(UILabel *)cell toNumber:(NSInteger)number {
+    CGFloat x = cell.frame.origin.x;
+    CGFloat floatNumber = abs((int)number);
+    CGFloat y = - ((CGFloat)floatNumber / numberCellLineCount) * self.numberCellHeight;
+    cell.frame = CGRectMake(x, y, self.cellWidth, self.numberCellHeight);
 }
 
-- (void)setScrollCell:(UILabel *)cell scrollDirection:(ScrollAnimationDirection)direction {
-    cell.tag = direction;
-}
-
-- (ScrollAnimationDirection)getDirectionOfScrollCell:(UILabel *)cell {
-    return cell.tag;
+- (void)setSignCellToSign:(Sign)sign {
+    CGFloat x = self.signCell.frame.origin.x;
+    CGFloat y = - ((CGFloat)sign / signCellLineCount) * self.signCellHeight;
+    self.signCell.frame = CGRectMake(x, y, self.cellWidth, self.signCellHeight);
 }
 
 - (NSArray<NSNumber *> *)getRepeatTimesWithChangeNumber:(NSInteger)change displayNumber:(NSInteger)number{
@@ -475,30 +517,25 @@ static const CGFloat bufferModulus = 0.7f;
     return repeatTimesArray;
 }
 
-- (NSArray<NSNumber *> *)getCellDisplayNumberWithNumber:(NSInteger)displayNumber {
+- (NSArray<NSNumber *> *)getEachCellNumberArrayWithDisplayedNumber:(NSInteger)displayedNumber {
     
-    NSMutableArray *displayCellNumbers = [[NSMutableArray alloc] init];
+    NSMutableArray *cellDisplayedNumbers = [[NSMutableArray alloc] init];
     NSInteger tmpNumber;
-    for (NSInteger i = 0; i < self.rowNumber; i++) {
-        tmpNumber = displayNumber % 10;
+    for (NSInteger i = 0; i < self.numberRow; i++) {
+        tmpNumber = displayedNumber % 10;
         NSNumber *number = @(tmpNumber);
-        [displayCellNumbers addObject:number];
-        displayNumber = displayNumber / 10;
+        [cellDisplayedNumbers addObject:number];
+        displayedNumber = displayedNumber / 10;
     }
     
-    return displayCellNumbers;
+    return cellDisplayedNumbers;
 }
 
-- (NSInteger)getDisplayNumberOfCell:(UILabel *)cell {
+- (NSInteger)getDisplayedNumberOfCell:(UILabel *)cell {
     CGFloat y = cell.frame.origin.y;
-    CGFloat tmpNumber = (- (y * 11 / self.cellHeight));
+    CGFloat tmpNumber = (- (y * numberCellLineCount / self.numberCellHeight));
     NSInteger displayNumber = (NSInteger)roundf(tmpNumber);
     return displayNumber;
-}
-
-- (CGFloat)calculateIntervalWithChangeNumber:(NSInteger)change {
-    NSInteger changeRow = [self calculateRowNumber:change];
-    return fabs(normalModulus * (change / pow(10, changeRow - 1)));
 }
 
 - (CGFloat)getIntervalWithOriginalNumber:(NSInteger)number displayNumber:(NSInteger)displayNumber {
@@ -517,12 +554,36 @@ static const CGFloat bufferModulus = 0.7f;
 
 #pragma mark - Getters
 
-- (UILabel *)makeScrollCell {
+- (UILabel *)makeNumberCell {
     UILabel *cell = [[UILabel alloc] init];
     cell.font = self.font;
-    cell.numberOfLines = 11;
+    cell.numberOfLines = numberCellLineCount;
     cell.textColor = self.textColor;
+    cell.text = numberCellText;
     return  cell;
+}
+
+- (UILabel *)signCell {
+    if (!_signCell) {
+        _signCell = [[UILabel alloc] init];
+        _signCell.font = self.font;
+        _signCell.numberOfLines = signCellLineCount;
+        switch (self.signSetting) {
+            case SignSettingNormal:
+                _signCell.text = @"-\n \n ";
+                break;
+            case SignSettingUnsigned:
+                _signCell.text = @" \n \n ";
+                break;
+            case SignSettingSigned:
+                _signCell.text = @"-\n \n+";
+                break;
+            default:
+                break;
+        }
+        _signCell.textColor = self.textColor;
+    }
+    return _signCell;
 }
 
 @end
