@@ -28,13 +28,15 @@ typedef NS_ENUM(NSUInteger, ScrollAnimationDirection) {
     ScrollAnimationDirectionNumber
 };
 
+
+
 static const CGFloat normalModulus = 0.3f;
 static const CGFloat bufferModulus = 0.7f;
 
 @interface DPScrollNumberLabel()
 
 @property (nonatomic, strong)NSMutableArray<UILabel *>  *cellArray;
-@property (nonatomic, assign)CGFloat                    fontSize;
+@property (nonatomic, assign)CGFloat                    fontSize; 
 @property (nonatomic, assign)NSUInteger                 rowNumber;
 @property (nonatomic, strong)NSMutableArray             *taskArray;
 @property (nonatomic, assign)BOOL                       isAnimating;
@@ -44,6 +46,7 @@ static const CGFloat bufferModulus = 0.7f;
 @property (nonatomic, assign)NSUInteger                 maxRowNumber;
 @property (nonatomic, strong)UIColor                    *textColor;
 @property (nonatomic, strong)UIFont                     *font;
+@property (nonatomic, assign)SignType                   signType;
 
 @end
 
@@ -59,11 +62,28 @@ static const CGFloat bufferModulus = 0.7f;
     return [self initWithNumber:originNumber fontSize:size textColor:color rowNumber:0];
 }
 
+- (instancetype)initWithNumber:(NSNumber *)originNumber fontSize:(CGFloat)size signType:(SignType)signType {
+    return [self initWithNumber:originNumber fontSize:size textColor:[UIColor grayColor] signType:signType];
+}
+
 - (instancetype)initWithNumber:(NSNumber *)originNumber fontSize:(CGFloat)size rowNumber:(NSUInteger)rowNumber {
     return [self initWithNumber:originNumber fontSize:size textColor:[UIColor grayColor] rowNumber:rowNumber];
 }
 
+- (instancetype)initWithNumber:(NSNumber *)originNumber fontSize:(CGFloat)size textColor:(UIColor *)color signType:(SignType)signType {
+    return [self initWithNumber:originNumber fontSize:size textColor:color signType:signType rowNumber:0];
+}
+
+
 - (instancetype)initWithNumber:(NSNumber *)originNumber fontSize:(CGFloat)size textColor:(UIColor *)color rowNumber:(NSUInteger)rowNumber {
+    return [self initWithNumber:originNumber fontSize:size textColor:color signType:SignTypeUnsigned rowNumber:rowNumber];
+}
+
+- (instancetype)initWithNumber:(NSNumber *)originNumber fontSize:(CGFloat)size signType:(SignType)signType rowNumber:(NSUInteger)rowNumber {
+    return [self initWithNumber:originNumber fontSize:size textColor:[UIColor grayColor] signType:signType rowNumber:rowNumber];
+}
+
+- (instancetype)initWithNumber:(NSNumber *)originNumber fontSize:(CGFloat)size textColor:(UIColor *)color signType:(SignType)signType rowNumber:(NSUInteger)rowNumber {
     self = [super init];
     if (self) {
         self.displayedNumber = originNumber;
@@ -73,6 +93,7 @@ static const CGFloat bufferModulus = 0.7f;
         self.finishedAnimationCount = 0;
         self.rowNumber = (rowNumber > 0 && rowNumber <= 8) ? rowNumber : 0;
         self.maxRowNumber = (self.rowNumber == 0) ? 8 : rowNumber;
+        self.signType = signType;
         [self commonInit];
     }
     return self;
@@ -86,7 +107,23 @@ static const CGFloat bufferModulus = 0.7f;
     return [self initWithNumber:originNumber font:font textColor:[UIColor grayColor] rowNumber:0];
 }
 
+- (instancetype)initWithNumber:(NSNumber *)originNumber font:(UIFont *)font signType:(SignType)signType {
+    return [self initWithNumber:originNumber font:font textColor:[UIColor grayColor] signType:signType rowNumber:0];
+}
+
+- (instancetype)initWithNumber:(NSNumber *)originNumber font:(UIFont *)font textColor:(UIColor *)color signType:(SignType)signType {
+    return [self initWithNumber:originNumber font:font textColor:color signType:signType rowNumber:0];
+}
+
 - (instancetype)initWithNumber:(NSNumber *)originNumber font:(UIFont *)font textColor:(UIColor *)color rowNumber:(NSUInteger)rowNumber {
+    return [self initWithNumber:originNumber font:font textColor:color signType:SignTypeUnsigned rowNumber:rowNumber];
+}
+
+- (instancetype)initWithNumber:(NSNumber *)originNumber font:(UIFont *)font signType:(SignType)signType rowNumber:(NSUInteger)rowNumber {
+    return [self initWithNumber:originNumber font:font textColor:[UIColor grayColor] signType:signType rowNumber:rowNumber];
+}
+
+- (instancetype)initWithNumber:(NSNumber *)originNumber font:(UIFont *)font textColor:(UIColor *)color signType:(SignType)signType rowNumber:(NSUInteger)rowNumber {
     self = [super init];
     if (self) {
         self.displayedNumber = originNumber;
@@ -96,6 +133,7 @@ static const CGFloat bufferModulus = 0.7f;
         self.finishedAnimationCount = 0;
         self.rowNumber = (rowNumber > 0 && rowNumber <= 8) ? rowNumber : 0;
         self.maxRowNumber = (self.rowNumber == 0) ? 8 : rowNumber;
+        self.signType = signType;
         [self commonInit];
     }
     return self;

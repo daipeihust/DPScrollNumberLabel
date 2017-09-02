@@ -9,6 +9,12 @@
 
 #import <UIKit/UIKit.h>
 
+typedef NS_ENUM(NSUInteger, SignType) {
+    SignTypeUnsigned, // only display positive number, default configuration is unsigned
+    SignTypeNormal, // negative numbers have negative sign but positive numbers don't have sign
+    SignTypeSigned // positive numbers have sign as well as negative numbers
+};
+
 
 @interface DPScrollNumberLabel : UIView
 
@@ -16,8 +22,13 @@
 
 - (instancetype)initWithNumber:(NSNumber *)originNumber fontSize:(CGFloat)size;
 - (instancetype)initWithNumber:(NSNumber *)originNumber fontSize:(CGFloat)size textColor:(UIColor *)color;
+- (instancetype)initWithNumber:(NSNumber *)originNumber fontSize:(CGFloat)size signType:(SignType)signType;
+- (instancetype)initWithNumber:(NSNumber *)originNumber fontSize:(CGFloat)size textColor:(UIColor *)color signType:(SignType)signType;
+
 - (instancetype)initWithNumber:(NSNumber *)originNumber font:(UIFont *)font;
 - (instancetype)initWithNumber:(NSNumber *)originNumber font:(UIFont *)font textColor:(UIColor *)color;
+- (instancetype)initWithNumber:(NSNumber *)originNumber font:(UIFont *)font signType:(SignType)signType;
+- (instancetype)initWithNumber:(NSNumber *)originNumber font:(UIFont *)font textColor:(UIColor *)color signType:(SignType)signType;
 
 /********************************
  
@@ -27,9 +38,41 @@
  Note:rowNumber shouldn't more than 8
  
  ********************************/
-- (instancetype)initWithNumber:(NSNumber *)originNumber fontSize:(CGFloat)size rowNumber:(NSUInteger)rowNumber;
-- (instancetype)initWithNumber:(NSNumber *)originNumber fontSize:(CGFloat)size textColor:(UIColor *)color rowNumber:(NSUInteger)rowNumber;
-- (instancetype)initWithNumber:(NSNumber *)originNumber font:(UIFont *)font textColor:(UIColor *)color rowNumber:(NSUInteger)rowNumber;
+- (instancetype)initWithNumber:(NSNumber *)originNumber
+                      fontSize:(CGFloat)size
+                     rowNumber:(NSUInteger)rowNumber;
+
+- (instancetype)initWithNumber:(NSNumber *)originNumber
+                      fontSize:(CGFloat)size
+                     textColor:(UIColor *)color
+                     rowNumber:(NSUInteger)rowNumber;
+
+- (instancetype)initWithNumber:(NSNumber *)originNumber
+                      fontSize:(CGFloat)size
+                      signType:(SignType)signType
+                     rowNumber:(NSUInteger)rowNumber;
+
+- (instancetype)initWithNumber:(NSNumber *)originNumber
+                      fontSize:(CGFloat)size
+                     textColor:(UIColor *)color
+                      signType:(SignType)signType
+                     rowNumber:(NSUInteger)rowNumber;
+
+- (instancetype)initWithNumber:(NSNumber *)originNumber
+                          font:(UIFont *)font
+                     textColor:(UIColor *)color
+                     rowNumber:(NSUInteger)rowNumber;
+
+- (instancetype)initWithNumber:(NSNumber *)originNumber
+                          font:(UIFont *)font
+                      signType:(SignType)signType
+                     rowNumber:(NSUInteger)rowNumber;
+
+- (instancetype)initWithNumber:(NSNumber *)originNumber
+                          font:(UIFont *)font
+                     textColor:(UIColor *)color
+                      signType:(SignType)signType
+                     rowNumber:(NSUInteger)rowNumber;
 
 - (void)changeToNumber:(NSNumber *)number animated:(BOOL)animated;
 - (void)changeToNumber:(NSNumber *)number interval:(CGFloat)interval animated:(BOOL)animated;
