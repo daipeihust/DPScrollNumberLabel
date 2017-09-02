@@ -37,7 +37,7 @@ static const CGFloat bufferModulus = 0.7f;
 @property (nonatomic, assign)CGFloat                    fontSize;
 @property (nonatomic, assign)NSUInteger                 rowNumber;
 @property (nonatomic, strong)NSMutableArray             *taskArray;
-@property (nonatomic, assign)BOOL                       isAnimation;
+@property (nonatomic, assign)BOOL                       isAnimating;
 @property (nonatomic, assign)CGFloat                    cellWidth;
 @property (nonatomic, assign)CGFloat                    cellHeight;
 @property (nonatomic, assign)NSInteger                  finishedAnimationCount;
@@ -69,7 +69,7 @@ static const CGFloat bufferModulus = 0.7f;
         self.displayedNumber = originNumber;
         self.font = [UIFont systemFontOfSize:size];
         self.textColor = color;
-        self.isAnimation = NO;
+        self.isAnimating = NO;
         self.finishedAnimationCount = 0;
         self.rowNumber = (rowNumber > 0 && rowNumber <= 8) ? rowNumber : 0;
         self.maxRowNumber = (self.rowNumber == 0) ? 8 : rowNumber;
@@ -92,7 +92,7 @@ static const CGFloat bufferModulus = 0.7f;
         self.displayedNumber = originNumber;
         self.font = font;
         self.textColor = color;
-        self.isAnimation = NO;
+        self.isAnimating = NO;
         self.finishedAnimationCount = 0;
         self.rowNumber = (rowNumber > 0 && rowNumber <= 8) ? rowNumber : 0;
         self.maxRowNumber = (self.rowNumber == 0) ? 8 : rowNumber;
@@ -333,7 +333,7 @@ static const CGFloat bufferModulus = 0.7f;
             NSNumber *interval = [task objectForKey:keyTaskInterval];
             [self playAnimationWithChange:changeNumber.integerValue displayNumber:displayNumber interval:interval.floatValue];
         }else {
-            self.isAnimation = NO;
+            self.isAnimating = NO;
         }
     }
 }
@@ -358,7 +358,7 @@ static const CGFloat bufferModulus = 0.7f;
     if (number.integerValue == self.displayedNumber.integerValue) {
         return ;
     }
-    if (self.isAnimation) {
+    if (self.isAnimating) {
         if (!self.taskArray) {
             self.taskArray = [NSMutableArray array];
         }
@@ -366,12 +366,12 @@ static const CGFloat bufferModulus = 0.7f;
     }else {
         if (animated) {
             [self playAnimationWithChange:number.integerValue - self.displayedNumber.integerValue displayNumber:number interval:interval];
-            self.isAnimation = YES;
-        }else {
+            self.isAnimating = YES;
+        } else {
             if (animated) {
                 [self playAnimationWithChange:number.integerValue - self.displayedNumber.integerValue displayNumber:number interval:interval];
-                self.isAnimation = YES;
-            }else {
+                self.isAnimating = YES;
+            } else {
                 NSArray<NSNumber *> *displayNumbers = [self getCellDisplayNumberWithNumber:number.integerValue];
                 for (int i = 0; i < displayNumbers.count; i++) {
                     [self setScrollCell:self.cellArray[i] toNumber:displayNumbers[i].integerValue];
