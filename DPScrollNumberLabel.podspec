@@ -19,7 +19,6 @@ Pod::Spec.new do |s|
   s.version      = "0.0.1"
   s.summary      = "DPScrollNumberLabel is a iOS UI Plugin, It display number and have a real logic animation when you change the displayed number"
   s.homepage     = "https://github.com/948080952/DPScrollNumberLabel"
-  s.screenshots  = "https://github.com/948080952/DPScrollNumberLabel/blob/master/DPScrollNumber.gif"
   s.license      = "MIT"
 
 
