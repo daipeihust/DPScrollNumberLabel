@@ -302,10 +302,10 @@ static const CGFloat bufferModulus = 0.7f;
                 [self setScrollCell:cell toNumber:(direction == ScrollAnimationDirectionUp)?0 : 10];
                 [UIView animateWithDuration:endDuration.floatValue delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
                     [self setScrollCell:cell toNumber:willDisplayNum.integerValue];
-                    } completion:^(BOOL finished) {
-                        [self checkTaskArrayWithAnimationCount:count];
-                        NSLog(@"end animation finish!");
-                    }];
+                } completion:^(BOOL finished) {
+                    [self checkTaskArrayWithAnimationCount:count];
+                    NSLog(@"end animation finish!");
+                }];
             }];
         }
     }];
