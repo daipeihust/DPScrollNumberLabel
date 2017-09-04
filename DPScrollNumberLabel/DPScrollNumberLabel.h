@@ -18,7 +18,7 @@ typedef NS_ENUM(NSUInteger, SignSetting) {
 
 @interface DPScrollNumberLabel : UIView
 
-@property (nonatomic, strong, readonly)NSNumber *displayedNumber;
+@property (nonatomic, strong, readonly)NSNumber *currentNumber;
 
 - (instancetype)initWithNumber:(NSNumber *)originNumber fontSize:(CGFloat)size;
 - (instancetype)initWithNumber:(NSNumber *)originNumber fontSize:(CGFloat)size textColor:(UIColor *)color;
