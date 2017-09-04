@@ -31,7 +31,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.scrollLabel = [[DPScrollNumberLabel alloc] initWithNumber:@1 fontSize:48];
+    self.scrollLabel = [[DPScrollNumberLabel alloc] initWithNumber:@(0) fontSize:48 signSetting:SignSettingSigned];
     
     self.scrollLabel.frame = CGRectMake(100, 100, self.scrollLabel.frame.size.width, self.scrollLabel.frame.size.height);
     
@@ -53,7 +53,7 @@
 
 - (void)buttonClicked:(UIButton *)sender {
     
-    NSInteger tmp = self.scrollLabel.displayedNumber.integerValue;
+    NSInteger tmp = self.scrollLabel.currentNumber.integerValue;
     
     switch (sender.tag) {
         case 0:
