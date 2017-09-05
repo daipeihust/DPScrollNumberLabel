@@ -20,15 +20,15 @@ typedef NS_ENUM(NSUInteger, SignSetting) {
 
 @property (nonatomic, strong, readonly)NSNumber *currentNumber;
 
-- (instancetype)initWithNumber:(NSNumber *)originNumber fontSize:(CGFloat)size;
-- (instancetype)initWithNumber:(NSNumber *)originNumber fontSize:(CGFloat)size textColor:(UIColor *)color;
-- (instancetype)initWithNumber:(NSNumber *)originNumber fontSize:(CGFloat)size signSetting:(SignSetting)signSetting;
-- (instancetype)initWithNumber:(NSNumber *)originNumber fontSize:(CGFloat)size textColor:(UIColor *)color signSetting:(SignSetting)signSetting;
+- (instancetype)initWithNumber:(NSNumber *)number fontSize:(CGFloat)size;
+- (instancetype)initWithNumber:(NSNumber *)number fontSize:(CGFloat)size textColor:(UIColor *)color;
+- (instancetype)initWithNumber:(NSNumber *)number fontSize:(CGFloat)size signSetting:(SignSetting)signSetting;
+- (instancetype)initWithNumber:(NSNumber *)number fontSize:(CGFloat)size textColor:(UIColor *)color signSetting:(SignSetting)signSetting;
 
-- (instancetype)initWithNumber:(NSNumber *)originNumber font:(UIFont *)font;
-- (instancetype)initWithNumber:(NSNumber *)originNumber font:(UIFont *)font textColor:(UIColor *)color;
-- (instancetype)initWithNumber:(NSNumber *)originNumber font:(UIFont *)font signSetting:(SignSetting)signSetting;
-- (instancetype)initWithNumber:(NSNumber *)originNumber font:(UIFont *)font textColor:(UIColor *)color signSetting:(SignSetting)signSetting;
+- (instancetype)initWithNumber:(NSNumber *)number font:(UIFont *)font;
+- (instancetype)initWithNumber:(NSNumber *)number font:(UIFont *)font textColor:(UIColor *)color;
+- (instancetype)initWithNumber:(NSNumber *)number font:(UIFont *)font signSetting:(SignSetting)signSetting;
+- (instancetype)initWithNumber:(NSNumber *)number font:(UIFont *)font textColor:(UIColor *)color signSetting:(SignSetting)signSetting;
 
 /********************************
  
@@ -38,37 +38,37 @@ typedef NS_ENUM(NSUInteger, SignSetting) {
  Note:rowNumber shouldn't more than 8
  
  ********************************/
-- (instancetype)initWithNumber:(NSNumber *)originNumber
+- (instancetype)initWithNumber:(NSNumber *)number
                       fontSize:(CGFloat)size
                      rowNumber:(NSUInteger)rowNumber;
 
-- (instancetype)initWithNumber:(NSNumber *)originNumber
+- (instancetype)initWithNumber:(NSNumber *)number
                       fontSize:(CGFloat)size
                      textColor:(UIColor *)color
                      rowNumber:(NSUInteger)rowNumber;
 
-- (instancetype)initWithNumber:(NSNumber *)originNumber
+- (instancetype)initWithNumber:(NSNumber *)number
                       fontSize:(CGFloat)size
                       signSetting:(SignSetting)signSetting
                      rowNumber:(NSUInteger)rowNumber;
 
-- (instancetype)initWithNumber:(NSNumber *)originNumber
+- (instancetype)initWithNumber:(NSNumber *)number
                       fontSize:(CGFloat)size
                      textColor:(UIColor *)color
                       signSetting:(SignSetting)signSetting
                      rowNumber:(NSUInteger)rowNumber;
 
-- (instancetype)initWithNumber:(NSNumber *)originNumber
+- (instancetype)initWithNumber:(NSNumber *)number
                           font:(UIFont *)font
                      textColor:(UIColor *)color
                      rowNumber:(NSUInteger)rowNumber;
 
-- (instancetype)initWithNumber:(NSNumber *)originNumber
+- (instancetype)initWithNumber:(NSNumber *)number
                           font:(UIFont *)font
                       signSetting:(SignSetting)signSetting
                      rowNumber:(NSUInteger)rowNumber;
 
-- (instancetype)initWithNumber:(NSNumber *)originNumber
+- (instancetype)initWithNumber:(NSNumber *)number
                           font:(UIFont *)font
                      textColor:(UIColor *)color
                       signSetting:(SignSetting)signSetting
