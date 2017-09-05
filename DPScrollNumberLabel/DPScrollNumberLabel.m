@@ -83,41 +83,41 @@ static NSString * const numberCellText = @"0\n9\n8\n7\n6\n5\n4\n3\n2\n1\n0\n1\n2
 
 #pragma mark - Init
 
-- (instancetype)initWithNumber:(NSNumber *)number fontSize:(CGFloat)size {
-    return [self initWithNumber:number fontSize:size textColor:[UIColor grayColor] rowNumber:0];
+- (instancetype)initWithNumber:(NSNumber *)number fontSize:(CGFloat)fontSize {
+    return [self initWithNumber:number fontSize:fontSize textColor:[UIColor grayColor] rowNumber:0];
 }
 
-- (instancetype)initWithNumber:(NSNumber *)number fontSize:(CGFloat)size textColor:(UIColor *)color {
-    return [self initWithNumber:number fontSize:size textColor:color rowNumber:0];
+- (instancetype)initWithNumber:(NSNumber *)number fontSize:(CGFloat)fontSize textColor:(UIColor *)textColor {
+    return [self initWithNumber:number fontSize:fontSize textColor:textColor rowNumber:0];
 }
 
-- (instancetype)initWithNumber:(NSNumber *)number fontSize:(CGFloat)size signSetting:(SignSetting)signSetting {
-    return [self initWithNumber:number fontSize:size textColor:[UIColor grayColor] signSetting:signSetting];
+- (instancetype)initWithNumber:(NSNumber *)number fontSize:(CGFloat)fontSize signSetting:(SignSetting)signSetting {
+    return [self initWithNumber:number fontSize:fontSize textColor:[UIColor grayColor] signSetting:signSetting];
 }
 
-- (instancetype)initWithNumber:(NSNumber *)number fontSize:(CGFloat)size rowNumber:(NSUInteger)rowNumber {
-    return [self initWithNumber:number fontSize:size textColor:[UIColor grayColor] rowNumber:rowNumber];
+- (instancetype)initWithNumber:(NSNumber *)number fontSize:(CGFloat)fontSize rowNumber:(NSUInteger)rowNumber {
+    return [self initWithNumber:number fontSize:fontSize textColor:[UIColor grayColor] rowNumber:rowNumber];
 }
 
-- (instancetype)initWithNumber:(NSNumber *)number fontSize:(CGFloat)size textColor:(UIColor *)color signSetting:(SignSetting)signSetting {
-    return [self initWithNumber:number fontSize:size textColor:color signSetting:signSetting rowNumber:0];
+- (instancetype)initWithNumber:(NSNumber *)number fontSize:(CGFloat)fontSize textColor:(UIColor *)textColor signSetting:(SignSetting)signSetting {
+    return [self initWithNumber:number fontSize:fontSize textColor:textColor signSetting:signSetting rowNumber:0];
 }
 
-- (instancetype)initWithNumber:(NSNumber *)number fontSize:(CGFloat)size textColor:(UIColor *)color rowNumber:(NSUInteger)rowNumber {
-    return [self initWithNumber:number fontSize:size textColor:color signSetting:SignSettingUnsigned rowNumber:rowNumber];
+- (instancetype)initWithNumber:(NSNumber *)number fontSize:(CGFloat)fontSize textColor:(UIColor *)textColor rowNumber:(NSUInteger)rowNumber {
+    return [self initWithNumber:number fontSize:fontSize textColor:textColor signSetting:SignSettingUnsigned rowNumber:rowNumber];
 }
 
-- (instancetype)initWithNumber:(NSNumber *)number fontSize:(CGFloat)size signSetting:(SignSetting)signSetting rowNumber:(NSUInteger)rowNumber {
-    return [self initWithNumber:number fontSize:size textColor:[UIColor grayColor] signSetting:signSetting rowNumber:rowNumber];
+- (instancetype)initWithNumber:(NSNumber *)number fontSize:(CGFloat)fontSize signSetting:(SignSetting)signSetting rowNumber:(NSUInteger)rowNumber {
+    return [self initWithNumber:number fontSize:fontSize textColor:[UIColor grayColor] signSetting:signSetting rowNumber:rowNumber];
 }
 
-- (instancetype)initWithNumber:(NSNumber *)number fontSize:(CGFloat)size textColor:(UIColor *)color signSetting:(SignSetting)signSetting rowNumber:(NSUInteger)rowNumber {
+- (instancetype)initWithNumber:(NSNumber *)number fontSize:(CGFloat)fontSize textColor:(UIColor *)textColor signSetting:(SignSetting)signSetting rowNumber:(NSUInteger)rowNumber {
     self = [super init];
     if (self) {
         self.targetNumber = number;
         self.currentNumber = number;
-        self.font = [UIFont systemFontOfSize:size];
-        self.textColor = color;
+        self.font = [UIFont systemFontOfSize:fontSize];
+        self.textColor = textColor;
         self.isAnimating = NO;
         self.finishedAnimationCount = 0;
         self.numberRow = (rowNumber > 0 && rowNumber <= 8) ? rowNumber : 0;
@@ -132,33 +132,33 @@ static NSString * const numberCellText = @"0\n9\n8\n7\n6\n5\n4\n3\n2\n1\n0\n1\n2
     return [self initWithNumber:number font:font textColor:[UIColor grayColor] rowNumber:0];
 }
 
-- (instancetype)initWithNumber:(NSNumber *)number font:(UIFont *)font textColor:(UIColor *)color {
-    return [self initWithNumber:number font:font textColor:[UIColor grayColor] rowNumber:0];
+- (instancetype)initWithNumber:(NSNumber *)number font:(UIFont *)font textColor:(UIColor *)textColor {
+    return [self initWithNumber:number font:font textColor:textColor rowNumber:0];
 }
 
 - (instancetype)initWithNumber:(NSNumber *)number font:(UIFont *)font signSetting:(SignSetting)signSetting {
     return [self initWithNumber:number font:font textColor:[UIColor grayColor] signSetting:signSetting rowNumber:0];
 }
 
-- (instancetype)initWithNumber:(NSNumber *)number font:(UIFont *)font textColor:(UIColor *)color signSetting:(SignSetting)signSetting {
-    return [self initWithNumber:number font:font textColor:color signSetting:signSetting rowNumber:0];
+- (instancetype)initWithNumber:(NSNumber *)number font:(UIFont *)font textColor:(UIColor *)textColor signSetting:(SignSetting)signSetting {
+    return [self initWithNumber:number font:font textColor:textColor signSetting:signSetting rowNumber:0];
 }
 
-- (instancetype)initWithNumber:(NSNumber *)number font:(UIFont *)font textColor:(UIColor *)color rowNumber:(NSUInteger)rowNumber {
-    return [self initWithNumber:number font:font textColor:color signSetting:SignSettingUnsigned rowNumber:rowNumber];
+- (instancetype)initWithNumber:(NSNumber *)number font:(UIFont *)font textColor:(UIColor *)textColor rowNumber:(NSUInteger)rowNumber {
+    return [self initWithNumber:number font:font textColor:textColor signSetting:SignSettingUnsigned rowNumber:rowNumber];
 }
 
 - (instancetype)initWithNumber:(NSNumber *)number font:(UIFont *)font signSetting:(SignSetting)signSetting rowNumber:(NSUInteger)rowNumber {
     return [self initWithNumber:number font:font textColor:[UIColor grayColor] signSetting:signSetting rowNumber:rowNumber];
 }
 
-- (instancetype)initWithNumber:(NSNumber *)number font:(UIFont *)font textColor:(UIColor *)color signSetting:(SignSetting)signSetting rowNumber:(NSUInteger)rowNumber {
+- (instancetype)initWithNumber:(NSNumber *)number font:(UIFont *)font textColor:(UIColor *)textColor signSetting:(SignSetting)signSetting rowNumber:(NSUInteger)rowNumber {
     self = [super init];
     if (self) {
         self.targetNumber = number;
         self.currentNumber = number;
         self.font = font;
-        self.textColor = color;
+        self.textColor = textColor;
         self.isAnimating = NO;
         self.finishedAnimationCount = 0;
         self.numberRow = (rowNumber > 0 && rowNumber <= 8) ? rowNumber : 0;

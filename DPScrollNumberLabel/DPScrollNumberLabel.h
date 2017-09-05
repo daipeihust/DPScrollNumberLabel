@@ -20,15 +20,15 @@ typedef NS_ENUM(NSUInteger, SignSetting) {
 
 @property (nonatomic, strong, readonly)NSNumber *currentNumber;
 
-- (instancetype)initWithNumber:(NSNumber *)number fontSize:(CGFloat)size;
-- (instancetype)initWithNumber:(NSNumber *)number fontSize:(CGFloat)size textColor:(UIColor *)color;
-- (instancetype)initWithNumber:(NSNumber *)number fontSize:(CGFloat)size signSetting:(SignSetting)signSetting;
-- (instancetype)initWithNumber:(NSNumber *)number fontSize:(CGFloat)size textColor:(UIColor *)color signSetting:(SignSetting)signSetting;
+- (instancetype)initWithNumber:(NSNumber *)number fontSize:(CGFloat)fontSize;
+- (instancetype)initWithNumber:(NSNumber *)number fontSize:(CGFloat)fontSize textColor:(UIColor *)textColor;
+- (instancetype)initWithNumber:(NSNumber *)number fontSize:(CGFloat)fontSize signSetting:(SignSetting)signSetting;
+- (instancetype)initWithNumber:(NSNumber *)number fontSize:(CGFloat)fontSize textColor:(UIColor *)textColor signSetting:(SignSetting)signSetting;
 
 - (instancetype)initWithNumber:(NSNumber *)number font:(UIFont *)font;
-- (instancetype)initWithNumber:(NSNumber *)number font:(UIFont *)font textColor:(UIColor *)color;
+- (instancetype)initWithNumber:(NSNumber *)number font:(UIFont *)font textColor:(UIColor *)textColor;
 - (instancetype)initWithNumber:(NSNumber *)number font:(UIFont *)font signSetting:(SignSetting)signSetting;
-- (instancetype)initWithNumber:(NSNumber *)number font:(UIFont *)font textColor:(UIColor *)color signSetting:(SignSetting)signSetting;
+- (instancetype)initWithNumber:(NSNumber *)number font:(UIFont *)font textColor:(UIColor *)textColor signSetting:(SignSetting)signSetting;
 
 /********************************
  
@@ -39,38 +39,38 @@ typedef NS_ENUM(NSUInteger, SignSetting) {
  
  ********************************/
 - (instancetype)initWithNumber:(NSNumber *)number
-                      fontSize:(CGFloat)size
+                      fontSize:(CGFloat)fontSize
                      rowNumber:(NSUInteger)rowNumber;
 
 - (instancetype)initWithNumber:(NSNumber *)number
-                      fontSize:(CGFloat)size
-                     textColor:(UIColor *)color
+                      fontSize:(CGFloat)fontSize
+                     textColor:(UIColor *)textColor
                      rowNumber:(NSUInteger)rowNumber;
 
 - (instancetype)initWithNumber:(NSNumber *)number
-                      fontSize:(CGFloat)size
+                      fontSize:(CGFloat)fontSize
                       signSetting:(SignSetting)signSetting
                      rowNumber:(NSUInteger)rowNumber;
 
 - (instancetype)initWithNumber:(NSNumber *)number
-                      fontSize:(CGFloat)size
-                     textColor:(UIColor *)color
-                      signSetting:(SignSetting)signSetting
-                     rowNumber:(NSUInteger)rowNumber;
-
-- (instancetype)initWithNumber:(NSNumber *)number
-                          font:(UIFont *)font
-                     textColor:(UIColor *)color
-                     rowNumber:(NSUInteger)rowNumber;
-
-- (instancetype)initWithNumber:(NSNumber *)number
-                          font:(UIFont *)font
+                      fontSize:(CGFloat)fontSize
+                     textColor:(UIColor *)textColor
                       signSetting:(SignSetting)signSetting
                      rowNumber:(NSUInteger)rowNumber;
 
 - (instancetype)initWithNumber:(NSNumber *)number
                           font:(UIFont *)font
-                     textColor:(UIColor *)color
+                     textColor:(UIColor *)textColor
+                     rowNumber:(NSUInteger)rowNumber;
+
+- (instancetype)initWithNumber:(NSNumber *)number
+                          font:(UIFont *)font
+                      signSetting:(SignSetting)signSetting
+                     rowNumber:(NSUInteger)rowNumber;
+
+- (instancetype)initWithNumber:(NSNumber *)number
+                          font:(UIFont *)font
+                     textColor:(UIColor *)textColor
                       signSetting:(SignSetting)signSetting
                      rowNumber:(NSUInteger)rowNumber;
 
