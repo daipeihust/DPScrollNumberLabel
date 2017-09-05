@@ -16,16 +16,26 @@
 #define keyScrollCell               @"scrollCell"
 #define keyDisplayNumber            @"displayNumber"
 #define keyStartDelay               @"startDelay"
+#define keyIntSign                  @"intSign"
 
-//task key
-#define keyTaskDisplayNumber        @"displayNumber"
-#define keyTaskChangeNumber         @"changeNumber"
-#define keyTaskInterval             @"interval"
+
+
+@interface DPAnimationTask : NSObject
+
+@property (nonatomic, assign) NSInteger     targetNumber;
+@property (nonatomic, assign) NSInteger     changeValue;
+@property (nonatomic, assign) CGFloat       interval;
+
+@end
+
+@implementation DPAnimationTask
+
+@end
 
 typedef NS_ENUM(NSUInteger, ScrollAnimationDirection) {
-    ScrollAnimationDirectionUp,
-    ScrollAnimationDirectionDown,
-    ScrollAnimationDirectionNumber
+    ScrollAnimationDirectionIncrease,
+    ScrollAnimationDirectionDecrease,
+    ScrollAnimationDirectionCount
 };
 
 typedef NS_ENUM(NSUInteger, Sign) {
@@ -87,7 +97,6 @@ static NSString * const numberCellText = @"0\n9\n8\n7\n6\n5\n4\n3\n2\n1\n0\n1\n2
 - (instancetype)initWithNumber:(NSNumber *)originNumber fontSize:(CGFloat)size textColor:(UIColor *)color signSetting:(SignSetting)signSetting {
     return [self initWithNumber:originNumber fontSize:size textColor:color signSetting:signSetting rowNumber:0];
 }
-
 
 - (instancetype)initWithNumber:(NSNumber *)originNumber fontSize:(CGFloat)size textColor:(UIColor *)color rowNumber:(NSUInteger)rowNumber {
     return [self initWithNumber:originNumber fontSize:size textColor:color signSetting:SignSettingUnsigned rowNumber:rowNumber];
@@ -185,18 +194,15 @@ static NSString * const numberCellText = @"0\n9\n8\n7\n6\n5\n4\n3\n2\n1\n0\n1\n2
     
     self.bounds = CGRectMake(0, 0, (self.numberRow + self.signRow) * self.cellWidth, self.numberCellHeight / numberCellLineCount);
     self.backgroundColor = [UIColor clearColor];
-//    self.layer.masksToBounds = YES;
-    
-    
+    self.layer.masksToBounds = YES;
 }
 
 - (void)initCells {
     int originNumber = self.targetNumber.intValue;
-    
+    int sign = originNumber >= 0 ? 1 : -1;
     if (self.numberRow == 0) {
         self.numberRow = [self calculateNumberRow:originNumber];
     }
-    
     self.cellArray = [[NSMutableArray alloc] init];
     
     CGRect rect = [numberCellText boundingRectWithSize:CGSizeZero
@@ -213,7 +219,7 @@ static NSString * const numberCellText = @"0\n9\n8\n7\n6\n5\n4\n3\n2\n1\n0\n1\n2
         UILabel *numberCell = [self makeNumberCell];
         numberCell.frame = CGRectMake((self.numberRow + self.signRow - 1 - i) * self.cellWidth, 0, self.cellWidth, self.numberCellHeight);
         NSNumber *displayNum = [displayNumberArray objectAtIndex:i];
-        [self moveNumberCell:numberCell toNumber:displayNum.integerValue];
+        [self moveNumberCell:numberCell toNumber:displayNum.integerValue sign:sign];
         [self addSubview:numberCell];
         [self.cellArray addObject:numberCell];
     }
@@ -222,11 +228,11 @@ static NSString * const numberCellText = @"0\n9\n8\n7\n6\n5\n4\n3\n2\n1\n0\n1\n2
     [self addSubview:self.signCell];
     int displayedNumber = self.targetNumber.intValue;
     if (displayedNumber > 0) {
-        [self setSignCellToSign:SignPositive];
+        [self moveSignCellToSign:SignPositive];
     } else if (displayedNumber < 0) {
-        [self setSignCellToSign:SignNegative];
+        [self moveSignCellToSign:SignNegative];
     } else {
-        [self setSignCellToSign:SignZero];
+        [self moveSignCellToSign:SignZero];
     }
     
 }
@@ -236,7 +242,7 @@ static NSString * const numberCellText = @"0\n9\n8\n7\n6\n5\n4\n3\n2\n1\n0\n1\n2
     if (rowNumber > self.numberRow) {
         for (NSInteger i = self.numberRow; i < rowNumber; i++) {
             UILabel *scrollCell = [self makeNumberCell];
-            scrollCell.frame = CGRectMake((self.numberRow + self.signRow - 1 - i) * self.cellWidth, 0, self.cellWidth, self.numberCellHeight);
+            scrollCell.frame = CGRectMake((self.numberRow + self.signRow - 1 - i) * self.cellWidth, -self.numberCellHeight * 10 / numberCellLineCount, self.cellWidth, self.numberCellHeight);
             [self.cellArray addObject:scrollCell];
         }
     }else {
@@ -276,20 +282,25 @@ static NSString * const numberCellText = @"0\n9\n8\n7\n6\n5\n4\n3\n2\n1\n0\n1\n2
 - (void)playAnimationWithChange:(NSInteger)changeValue previousNumber:(NSNumber *)previousNumber interval:(CGFloat)interval{
     
     BOOL signChanged = (previousNumber.intValue * self.targetNumber.intValue) < 0;
-    
+    int sign = self.targetNumber.intValue >= 0 ? 1 : -1;
     if (signChanged) {
+        sign = previousNumber.intValue >= 0 ? 1 : -1;
         CGFloat interval2 = (CGFloat)fabs(self.targetNumber.integerValue * interval / (CGFloat)changeValue);
         NSInteger changeValue2 = self.targetNumber.integerValue;
+        DPAnimationTask *task = [[DPAnimationTask alloc] init];
+        task.targetNumber = self.targetNumber.integerValue;
+        task.interval = interval2;
+        task.changeValue = changeValue2;
         @synchronized (self.taskQueue) {
-            [self.taskQueue addObject:@{keyTaskDisplayNumber:self.targetNumber, keyTaskInterval:@(interval2), keyTaskChangeNumber:@(changeValue2)}];
+            [self.taskQueue addObject:task];
         }
         changeValue = - previousNumber.integerValue;
         interval = interval - interval2;
-        self.targetNumber = 0;
-//        [self makeSignChangeAnimation];
+        self.targetNumber = @0;
     } else if (previousNumber.intValue == 0) {
         [self makeSignChangeAnimation];
     } else if (self.targetNumber.intValue == 0) {
+        sign = previousNumber.intValue >= 0 ? 1 : -1;
         [self makeSignChangeAnimation];
     }
     
@@ -308,7 +319,7 @@ static NSString * const numberCellText = @"0\n9\n8\n7\n6\n5\n4\n3\n2\n1\n0\n1\n2
         interval = [self getIntervalWithPreviousNumber:previousNumber.integerValue targetNumber:self.targetNumber.integerValue];
     }
     
-    ScrollAnimationDirection direction = (changeValue > 0)? ScrollAnimationDirectionUp : ScrollAnimationDirectionDown;
+    ScrollAnimationDirection direction = ((changeValue * sign) > 0)? ScrollAnimationDirectionIncrease : ScrollAnimationDirectionDecrease;
     
     CGFloat delay = 0.0f;
     
@@ -323,7 +334,7 @@ static NSString * const numberCellText = @"0\n9\n8\n7\n6\n5\n4\n3\n2\n1\n0\n1\n2
             if (repeatCount == 0) {
                 [self makeSingleAnimationWithCell:cell duration:interval delay:delay animationCount:repeatCountArray.count displayNumber:willDisplayNum.integerValue];
             }else {
-                if (direction == ScrollAnimationDirectionUp) {
+                if (direction == ScrollAnimationDirectionIncrease) {
                     
                     startDuration = interval * (10 - [self getValueOfCell:cell]) / ceilf(fabs(changeValue / pow(10, i)));
                     CGFloat cycleDuration = interval * 10 / fabs(changeValue / pow(10, i));
@@ -336,9 +347,10 @@ static NSString * const numberCellText = @"0\n9\n8\n7\n6\n5\n4\n3\n2\n1\n0\n1\n2
                                                 keyCycleDuration:   @(cycleDuration),
                                                 keyEndDuration:     @(endDuration),
                                                 keyRepeatCount:     @(repeatCount - 1),
-                                                keyDisplayNumber:   willDisplayNum};
+                                                keyDisplayNumber:   willDisplayNum,
+                                                keyIntSign:         @(sign)};
                     [self makeMultiAnimationWithCell:cell direction:direction animationCount:repeatCountArray.count attribute:attribute];
-                }else if (direction == ScrollAnimationDirectionDown) {
+                }else if (direction == ScrollAnimationDirectionDecrease) {
                     startDuration = interval * ([self getValueOfCell:cell] - 0) / ceilf(fabs(changeValue / pow(10, i)));
                     CGFloat cycleDuration = interval * 10 / fabs(changeValue / pow(10, i));
                     if (repeatCount == 1) {
@@ -350,7 +362,8 @@ static NSString * const numberCellText = @"0\n9\n8\n7\n6\n5\n4\n3\n2\n1\n0\n1\n2
                                                 keyCycleDuration:   @(cycleDuration),
                                                 keyEndDuration:     @(endDuration),
                                                 keyRepeatCount:     @(repeatCount - 1),
-                                                keyDisplayNumber:   willDisplayNum};
+                                                keyDisplayNumber:   willDisplayNum,
+                                                keyIntSign:         @(sign)};
                     [self makeMultiAnimationWithCell:cell direction:direction animationCount:repeatCountArray.count attribute:attribute];
                 }
             }
@@ -370,16 +383,17 @@ static NSString * const numberCellText = @"0\n9\n8\n7\n6\n5\n4\n3\n2\n1\n0\n1\n2
     NSNumber *repeatCount = [attribute objectForKey:keyRepeatCount];
     NSNumber *willDisplayNum = [attribute objectForKey:keyDisplayNumber];
     NSNumber *startDelay = [attribute objectForKey:keyStartDelay];
+    NSNumber *signNumber = [attribute objectForKey:keyIntSign];
+    int sign = signNumber.intValue;
     
     [UIView animateWithDuration:startDuration.floatValue delay:startDelay.floatValue options:UIViewAnimationOptionCurveEaseIn animations:^{
-        [self moveNumberCell:cell toNumber:(direction == ScrollAnimationDirectionUp)?10 : 0];
+        [self moveNumberCell:cell toNumber:(direction == ScrollAnimationDirectionIncrease)? 10 : 0 sign:sign];
     } completion:^(BOOL finished) {
         NSLog(@"start animation finish!");
-        [self moveNumberCell:cell toNumber:(direction == ScrollAnimationDirectionUp)?0 : 10];
-        
+        [self moveNumberCell:cell toNumber:(direction == ScrollAnimationDirectionIncrease)? 0 : 10 sign:sign];
         if (cycleDuration.floatValue == 0) {
             [UIView animateWithDuration:endDuration.floatValue delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-                [self moveNumberCell:cell toNumber:willDisplayNum.integerValue];
+                [self moveNumberCell:cell toNumber:willDisplayNum.integerValue sign:sign];
             } completion:^(BOOL finished) {
                 [self oneAnimationDidFinishedWithTotalCount:count];
                 NSLog(@"end animation finish!");
@@ -387,21 +401,12 @@ static NSString * const numberCellText = @"0\n9\n8\n7\n6\n5\n4\n3\n2\n1\n0\n1\n2
         }else {
             [UIView animateWithDuration:cycleDuration.floatValue delay:0 options:UIViewAnimationOptionCurveLinear | UIViewAnimationOptionRepeat animations:^{
                 [UIView setAnimationRepeatCount:repeatCount.integerValue];
-                switch (direction) {
-                    case ScrollAnimationDirectionUp:
-                        [self moveNumberCell:cell toNumber:10];
-                        break;
-                    case ScrollAnimationDirectionDown:
-                        [self moveNumberCell:cell toNumber:0];
-                        break;
-                    default:
-                        break;
-                }
+                [self moveNumberCell:cell toNumber:(direction == ScrollAnimationDirectionIncrease) ? 10 : 0 sign:sign];
             } completion:^(BOOL finished) {
                 NSLog(@"cycle animation finish!");
-                [self moveNumberCell:cell toNumber:(direction == ScrollAnimationDirectionUp)?0 : 10];
+                [self moveNumberCell:cell toNumber:(direction == ScrollAnimationDirectionIncrease)?0 : 10 sign:sign];
                 [UIView animateWithDuration:endDuration.floatValue delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-                    [self moveNumberCell:cell toNumber:willDisplayNum.integerValue];
+                    [self moveNumberCell:cell toNumber:willDisplayNum.integerValue sign:sign];
                 } completion:^(BOOL finished) {
                     [self oneAnimationDidFinishedWithTotalCount:count];
                     NSLog(@"end animation finish!");
@@ -412,9 +417,10 @@ static NSString * const numberCellText = @"0\n9\n8\n7\n6\n5\n4\n3\n2\n1\n0\n1\n2
 }
 
 - (void)makeSingleAnimationWithCell:(UILabel *)cell duration:(CGFloat)duration delay:(CGFloat)delay animationCount:(NSInteger)count displayNumber:(NSInteger)displayNumber{
+    int sign = displayNumber >= 0 ? 1 : -1;
     
     [UIView animateWithDuration:duration delay:delay options:UIViewAnimationOptionCurveEaseOut animations:^{
-        [self moveNumberCell:cell toNumber:displayNumber];
+        [self moveNumberCell:cell toNumber:displayNumber sign:sign];
     } completion:^(BOOL finished) {
         [self oneAnimationDidFinishedWithTotalCount:count];
         NSLog(@"single animation finish!");
@@ -431,7 +437,7 @@ static NSString * const numberCellText = @"0\n9\n8\n7\n6\n5\n4\n3\n2\n1\n0\n1\n2
         sign = SignZero;
     }
     [UIView animateWithDuration:0.5 animations:^{
-        [self setSignCellToSign:sign];
+        [self moveSignCellToSign:sign];
     }];
 }
 
@@ -446,14 +452,11 @@ static NSString * const numberCellText = @"0\n9\n8\n7\n6\n5\n4\n3\n2\n1\n0\n1\n2
 - (void)checkTaskArray {
     @synchronized (self.taskQueue) {
         if (self.taskQueue.count != 0) {
-            NSDictionary *task = [self.taskQueue objectAtIndex:0];
+            DPAnimationTask *task = [self.taskQueue firstObject];
             [self.taskQueue removeObject:task];
-            NSNumber *displayNumber = [task objectForKey:keyTaskDisplayNumber];
-            NSNumber *changeNumber = [task objectForKey:keyTaskChangeNumber];
-            NSNumber *interval = [task objectForKey:keyTaskInterval];
             NSNumber *previousNumber = self.targetNumber;
-            self.targetNumber = displayNumber;
-            [self playAnimationWithChange:changeNumber.integerValue previousNumber:previousNumber interval:interval.floatValue];
+            self.targetNumber = @(task.targetNumber);
+            [self playAnimationWithChange:task.changeValue previousNumber:previousNumber interval:task.interval];
         } else {
             self.isAnimating = NO;
         }
@@ -480,21 +483,26 @@ static NSString * const numberCellText = @"0\n9\n8\n7\n6\n5\n4\n3\n2\n1\n0\n1\n2
     }
     if (self.isAnimating) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            DPAnimationTask *task = [[DPAnimationTask alloc] init];
+            task.targetNumber = number.integerValue;
+            task.changeValue = number.integerValue - self.targetNumber.integerValue;
+            task.interval = interval;
             @synchronized (self.taskQueue) {
                 [self.taskQueue removeAllObjects];
-                [self.taskQueue addObject:@{keyTaskDisplayNumber:number, keyTaskChangeNumber:@(number.integerValue - self.targetNumber.integerValue),keyTaskInterval:@(interval)}];
+                [self.taskQueue addObject:task];
             }
         });
     } else {
         NSNumber *previousNumber = self.targetNumber;
         self.targetNumber = number;
         if (animated) {
-            [self playAnimationWithChange:number.integerValue - self.targetNumber.integerValue previousNumber:previousNumber interval:interval];
+            [self playAnimationWithChange:number.integerValue - previousNumber.integerValue previousNumber:previousNumber interval:interval];
             self.isAnimating = YES;
         } else {
+            int sign = number.integerValue >= 0 ? 1 : -1;
             NSArray<NSNumber *> *displayNumbers = [self getEachCellValueArrayWithTargetNumber:number.integerValue];
             for (int i = 0; i < displayNumbers.count; i++) {
-                [self moveNumberCell:self.cellArray[i] toNumber:displayNumbers[i].integerValue];
+                [self moveNumberCell:self.cellArray[i] toNumber:displayNumbers[i].integerValue sign:sign];
             }
         }
     }
@@ -511,20 +519,14 @@ static NSString * const numberCellText = @"0\n9\n8\n7\n6\n5\n4\n3\n2\n1\n0\n1\n2
     return numberRow;
 }
 
-- (void)moveNumberCell:(UILabel *)cell toNumber:(NSInteger)number {
+- (void)moveNumberCell:(UILabel *)cell toNumber:(NSInteger)number sign:(int)sign{
     CGFloat x = cell.frame.origin.x;
     CGFloat floatNumber = abs((int)number);
-    int sign;
-    if (self.targetNumber.intValue != 0) {
-        sign = self.targetNumber.intValue / abs(self.targetNumber.intValue);
-    } else {
-        sign = 0;
-    }
-    CGFloat y = - self.numberCellHeight * 10 / numberCellLineCount - sign * ((CGFloat)floatNumber / numberCellLineCount) * self.numberCellHeight;
+    CGFloat y = - self.numberCellHeight / numberCellLineCount * 10 - sign * ((CGFloat)floatNumber / numberCellLineCount) * self.numberCellHeight;
     cell.frame = CGRectMake(x, y, self.cellWidth, self.numberCellHeight);
 }
 
-- (void)setSignCellToSign:(Sign)sign {
+- (void)moveSignCellToSign:(Sign)sign {
     CGFloat x = self.signCell.frame.origin.x;
     CGFloat y = - ((CGFloat)sign / signCellLineCount) * self.signCellHeight;
     self.signCell.frame = CGRectMake(x, y, self.cellWidth, self.signCellHeight);
@@ -571,8 +573,9 @@ static NSString * const numberCellText = @"0\n9\n8\n7\n6\n5\n4\n3\n2\n1\n0\n1\n2
 
 - (NSInteger)getValueOfCell:(UILabel *)cell {
     CGFloat y = cell.frame.origin.y;
-    CGFloat tmpNumber = (- (y * numberCellLineCount / self.numberCellHeight));
+    CGFloat tmpNumber = (- (y * numberCellLineCount / self.numberCellHeight)) - 10;
     NSInteger displayNumber = (NSInteger)roundf(tmpNumber);
+    displayNumber = abs((int)displayNumber);
     return displayNumber;
 }
 
