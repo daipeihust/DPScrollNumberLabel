@@ -230,8 +230,6 @@ typedef NS_ENUM(NSUInteger, SignSetting) {
                       signSetting:(SignSetting)signSetting
                      rowNumber:(NSUInteger)rowNumber;
 
-
-
 /**
  When you want to change the display value, you can use this method, 
  and the interval of scroll animation will be calculated automatically
