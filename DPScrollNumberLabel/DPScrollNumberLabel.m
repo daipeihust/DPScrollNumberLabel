@@ -64,7 +64,7 @@ static NSString * const numberCellText = @"0\n9\n8\n7\n6\n5\n4\n3\n2\n1\n0\n1\n2
 @property (nonatomic, strong) NSMutableArray<UILabel *>     *cellArray;
 @property (nonatomic, strong) UILabel                       *signCell;
 @property (nonatomic, assign) CGFloat                       fontSize;
-@property (nonatomic, assign) NSUInteger                    numberRow;
+@property (nonatomic, assign) NSUInteger                    rowNumber;
 @property (nonatomic, strong) NSMutableArray                *taskQueue;
 @property (nonatomic, assign) BOOL                          isAnimating;
 @property (nonatomic, assign) CGFloat                       cellWidth;
@@ -120,8 +120,8 @@ static NSString * const numberCellText = @"0\n9\n8\n7\n6\n5\n4\n3\n2\n1\n0\n1\n2
         self.textColor = textColor;
         self.isAnimating = NO;
         self.finishedAnimationCount = 0;
-        self.numberRow = (rowNumber > 0 && rowNumber <= 8) ? rowNumber : 0;
-        self.maxRowNumber = (self.numberRow == 0) ? 8 : rowNumber;
+        self.rowNumber = (rowNumber > 0 && rowNumber <= 8) ? rowNumber : 0;
+        self.maxRowNumber = (self.rowNumber == 0) ? 8 : rowNumber;
         self.signSetting = signSetting;
         [self commonInit];
     }
@@ -161,8 +161,8 @@ static NSString * const numberCellText = @"0\n9\n8\n7\n6\n5\n4\n3\n2\n1\n0\n1\n2
         self.textColor = textColor;
         self.isAnimating = NO;
         self.finishedAnimationCount = 0;
-        self.numberRow = (rowNumber > 0 && rowNumber <= 8) ? rowNumber : 0;
-        self.maxRowNumber = (self.numberRow == 0) ? 8 : rowNumber;
+        self.rowNumber = (rowNumber > 0 && rowNumber <= 8) ? rowNumber : 0;
+        self.maxRowNumber = (self.rowNumber == 0) ? 8 : rowNumber;
         self.signSetting = signSetting;
         [self commonInit];
     }
@@ -197,7 +197,7 @@ static NSString * const numberCellText = @"0\n9\n8\n7\n6\n5\n4\n3\n2\n1\n0\n1\n2
 
 - (void)initParent{
     
-    self.bounds = CGRectMake(0, 0, (self.numberRow + self.signRow) * self.cellWidth, self.numberCellHeight / numberCellLineCount);
+    self.bounds = CGRectMake(0, 0, (self.rowNumber + self.signRow) * self.cellWidth, self.numberCellHeight / numberCellLineCount);
     self.backgroundColor = [UIColor clearColor];
     self.layer.masksToBounds = YES;
 }
@@ -205,8 +205,8 @@ static NSString * const numberCellText = @"0\n9\n8\n7\n6\n5\n4\n3\n2\n1\n0\n1\n2
 - (void)initCells {
     int originNumber = self.targetNumber.intValue;
     int sign = originNumber >= 0 ? 1 : -1;
-    if (self.numberRow == 0) {
-        self.numberRow = [self calculateNumberRow:originNumber];
+    if (self.rowNumber == 0) {
+        self.rowNumber = [self calculateNumberRow:originNumber];
     }
     self.cellArray = [[NSMutableArray alloc] init];
     
@@ -220,9 +220,9 @@ static NSString * const numberCellText = @"0\n9\n8\n7\n6\n5\n4\n3\n2\n1\n0\n1\n2
     
     NSArray *displayNumberArray = [self getEachCellValueArrayWithTargetNumber:self.targetNumber.integerValue];
     
-    for (NSInteger i = 0; i < self.numberRow; i++) {
+    for (NSInteger i = 0; i < self.rowNumber; i++) {
         UILabel *numberCell = [self makeNumberCell];
-        numberCell.frame = CGRectMake((self.numberRow + self.signRow - 1 - i) * self.cellWidth, 0, self.cellWidth, self.numberCellHeight);
+        numberCell.frame = CGRectMake((self.rowNumber + self.signRow - 1 - i) * self.cellWidth, 0, self.cellWidth, self.numberCellHeight);
         NSNumber *displayNum = [displayNumberArray objectAtIndex:i];
         [self moveNumberCell:numberCell toNumber:displayNum.integerValue sign:sign];
         [self addSubview:numberCell];
@@ -242,16 +242,31 @@ static NSString * const numberCellText = @"0\n9\n8\n7\n6\n5\n4\n3\n2\n1\n0\n1\n2
     
 }
 
+- (void)updateToRowNumber:(NSInteger)rowNumber {
+    if (rowNumber == self.rowNumber) {
+        return;
+    }
+    [self removeAllCellFromSuperview];
+    [self updateCellModelToFitRowNumber:rowNumber];
+    [self updateCellLayoutToFitRowNumber:rowNumber withAnimation:YES];
+    self.rowNumber = rowNumber;
+}
+
+- (void)removeAllCellFromSuperview {
+    
+    [self.cellArray makeObjectsPerformSelector:@selector(removeFromSuperview)];
+}
+
 - (void)updateCellModelToFitRowNumber:(NSInteger)rowNumber {
     
-    if (rowNumber > self.numberRow) {
-        for (NSInteger i = self.numberRow; i < rowNumber; i++) {
+    if (rowNumber > self.rowNumber) {
+        for (NSInteger i = self.rowNumber; i < rowNumber; i++) {
             UILabel *scrollCell = [self makeNumberCell];
-            scrollCell.frame = CGRectMake((self.numberRow + self.signRow - 1 - i) * self.cellWidth, -self.numberCellHeight * 10 / numberCellLineCount, self.cellWidth, self.numberCellHeight);
+            scrollCell.frame = CGRectMake((self.rowNumber + self.signRow - 1 - i) * self.cellWidth, -self.numberCellHeight * 10 / numberCellLineCount, self.cellWidth, self.numberCellHeight);
             [self.cellArray addObject:scrollCell];
         }
     }else {
-        for (NSInteger i = rowNumber; i < self.numberRow; i++) {
+        for (NSInteger i = rowNumber; i < self.rowNumber; i++) {
             [self.cellArray removeLastObject];
         }
     }
@@ -259,15 +274,17 @@ static NSString * const numberCellText = @"0\n9\n8\n7\n6\n5\n4\n3\n2\n1\n0\n1\n2
 
 - (void)updateCellLayoutToFitRowNumber:(NSUInteger)rowNumber withAnimation:(BOOL)animated{
     
-    if (rowNumber == self.numberRow) {
-        return ;
-    }
-    [self.cellArray makeObjectsPerformSelector:@selector(removeFromSuperview)];
     for (UILabel *cell in self.cellArray) {
         [self addSubview:cell];
     }
     __weak typeof(self) weakSelf = self;
-    [UIView animateWithDuration:0.2 * (rowNumber - self.numberRow) animations:^{
+    NSUInteger interval = 0;
+    if (rowNumber > self.rowNumber) {
+        interval = rowNumber - self.rowNumber;
+    } else {
+        interval = self.rowNumber - rowNumber;
+    }
+    [UIView animateWithDuration:0.2 * interval animations:^{
         for (int i = 0; i < rowNumber; i++) {
             UILabel *cell = [weakSelf.cellArray objectAtIndex:i];
             cell.frame = CGRectMake((rowNumber + self.signRow - 1 - i) * weakSelf.cellWidth,
@@ -311,10 +328,8 @@ static NSString * const numberCellText = @"0\n9\n8\n7\n6\n5\n4\n3\n2\n1\n0\n1\n2
     
     NSInteger targetRowNumber = [self calculateNumberRow:self.targetNumber.intValue];
     
-    if (targetRowNumber > self.numberRow) {
-        [self updateCellModelToFitRowNumber:targetRowNumber];
-        [self updateCellLayoutToFitRowNumber:targetRowNumber withAnimation:YES];
-        self.numberRow = targetRowNumber;
+    if (targetRowNumber > self.rowNumber) {
+        [self updateToRowNumber:targetRowNumber];
     }
     
     NSArray *repeatCountArray = [self getRepeatTimesWithChangeNumber:changeValue targetNumber:self.targetNumber.integerValue];
@@ -458,6 +473,10 @@ static NSString * const numberCellText = @"0\n9\n8\n7\n6\n5\n4\n3\n2\n1\n0\n1\n2
             [self playAnimationWithChange:task.changeValue previousNumber:previousNumber interval:task.interval];
         } else {
             self.isAnimating = NO;
+            NSInteger needNumberRow = [self calculateNumberRow:self.currentNumber.intValue];
+            if (needNumberRow < self.rowNumber) {
+                [self updateToRowNumber:needNumberRow];
+            }
         }
     }
 }
@@ -560,7 +579,7 @@ static NSString * const numberCellText = @"0\n9\n8\n7\n6\n5\n4\n3\n2\n1\n0\n1\n2
     
     NSMutableArray *cellValueArray = [[NSMutableArray alloc] init];
     NSInteger tmp;
-    for (NSInteger i = 0; i < self.numberRow; i++) {
+    for (NSInteger i = 0; i < self.rowNumber; i++) {
         tmp = targetNumber % 10;
         NSNumber *number = @(tmp);
         [cellValueArray addObject:number];
@@ -585,7 +604,6 @@ static NSString * const numberCellText = @"0\n9\n8\n7\n6\n5\n4\n3\n2\n1\n0\n1\n2
     NSInteger tmp1 = targetNumber / (NSInteger)pow(10, count - 1);
     NSInteger tmp2 = previousNumber / (NSInteger)pow(10, count - 1);
     
-    NSLog(@"tmp1:%ld tmp2:%ld", (long)tmp1, (long)tmp2);
     NSInteger maxChangeNum = labs(tmp1 % 10 - tmp2 % 10);
     
     return normalModulus * count * maxChangeNum;
