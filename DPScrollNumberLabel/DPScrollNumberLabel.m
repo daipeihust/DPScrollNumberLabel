@@ -303,7 +303,11 @@ static NSString * const numberCellText = @"0\n9\n8\n7\n6\n5\n4\n3\n2\n1\n0\n1\n2
 
 - (void)playAnimationWithChange:(NSInteger)changeValue previousNumber:(NSNumber *)previousNumber interval:(CGFloat)interval{
     
-    BOOL signChanged = (previousNumber.intValue * self.targetNumber.intValue) < 0;
+    BOOL signChanged = NO;
+    if ((previousNumber.integerValue < 0 && self.targetNumber.integerValue > 0) ||
+        (previousNumber.integerValue > 0 && self.targetNumber.integerValue < 0)) {
+        signChanged = YES;
+    }
     int sign = self.targetNumber.intValue >= 0 ? 1 : -1;
     if (signChanged) {
         sign = previousNumber.intValue >= 0 ? 1 : -1;
