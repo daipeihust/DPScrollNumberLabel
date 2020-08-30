@@ -121,4 +121,8 @@ end
 
 2.显示的位数有限制，最大8位
 
+# 联系或支持我
 
+<img src="contact_me.jpeg" width="300">
+
+<img src="support_me.jpeg" width="300">
