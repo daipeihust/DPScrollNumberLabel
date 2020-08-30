@@ -123,6 +123,7 @@ end
 
 # 联系或支持我
 
-<img src="contact_me.jpeg" width="300">
-
-<img src="support_me.jpeg" width="300">
+<div align="left">
+    <img src="contact_me.jpeg" height="300">
+    <img src="support_me.jpeg" height="300">
+</div>
