@@ -193,6 +193,11 @@ static NSString * const numberCellText = @"0\n9\n8\n7\n6\n5\n4\n3\n2\n1\n0\n1\n2
     }
 }
 
+- (CGSize)intrinsicContentSize {
+	return CGSizeMake((MIN(self.rowNumber ?: [self calculateNumberRow:self.currentNumber.integerValue], self.maxRowNumber) + self.signRow) * self.cellWidth,
+					  self.numberCellHeight/numberCellLineCount);
+}
+
 #pragma mark - ConfigViews
 
 - (void)initParent{
@@ -250,6 +255,7 @@ static NSString * const numberCellText = @"0\n9\n8\n7\n6\n5\n4\n3\n2\n1\n0\n1\n2
     [self updateCellModelToFitRowNumber:rowNumber];
     [self updateCellLayoutToFitRowNumber:rowNumber withAnimation:YES];
     self.rowNumber = rowNumber;
+	[self invalidateIntrinsicContentSize];
 }
 
 - (void)removeAllCellFromSuperview {
