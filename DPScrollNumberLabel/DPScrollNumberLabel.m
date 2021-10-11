@@ -76,6 +76,7 @@ static NSString * const numberCellText = @"0\n9\n8\n7\n6\n5\n4\n3\n2\n1\n0\n1\n2
 @property (nonatomic, strong) UIFont                        *font;
 @property (nonatomic, assign) SignSetting                   signSetting;
 @property (nonatomic, assign) NSUInteger                    signRow;
+@property (nonatomic, assign) BOOL							fixedRowNumber;
 
 @end
 
@@ -120,6 +121,7 @@ static NSString * const numberCellText = @"0\n9\n8\n7\n6\n5\n4\n3\n2\n1\n0\n1\n2
         self.textColor = textColor;
         self.isAnimating = NO;
         self.finishedAnimationCount = 0;
+		self.fixedRowNumber = rowNumber;
         self.rowNumber = (rowNumber > 0 && rowNumber <= 8) ? rowNumber : 0;
         self.maxRowNumber = (self.rowNumber == 0) ? 8 : rowNumber;
         self.signSetting = signSetting;
@@ -161,6 +163,7 @@ static NSString * const numberCellText = @"0\n9\n8\n7\n6\n5\n4\n3\n2\n1\n0\n1\n2
         self.textColor = textColor;
         self.isAnimating = NO;
         self.finishedAnimationCount = 0;
+		self.fixedRowNumber = rowNumber;
         self.rowNumber = (rowNumber > 0 && rowNumber <= 8) ? rowNumber : 0;
         self.maxRowNumber = (self.rowNumber == 0) ? 8 : rowNumber;
         self.signSetting = signSetting;
@@ -248,7 +251,7 @@ static NSString * const numberCellText = @"0\n9\n8\n7\n6\n5\n4\n3\n2\n1\n0\n1\n2
 }
 
 - (void)updateToRowNumber:(NSInteger)rowNumber {
-    if (rowNumber == self.rowNumber) {
+	if (rowNumber == self.rowNumber || self.fixedRowNumber) {
         return;
     }
     [self removeAllCellFromSuperview];
