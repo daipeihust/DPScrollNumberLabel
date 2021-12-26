@@ -35,6 +35,8 @@
     
     self.scrollLabel.frame = CGRectMake(100, 100, self.scrollLabel.frame.size.width, self.scrollLabel.frame.size.height);
     
+    self.scrollLabel.minRowNumber = 2;
+    
     [self.view addSubview:self.scrollLabel];
     
     [self.view addSubview:self.textView];

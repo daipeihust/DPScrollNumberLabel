@@ -123,6 +123,7 @@ static NSString * const numberCellText = @"0\n9\n8\n7\n6\n5\n4\n3\n2\n1\n0\n1\n2
         self.rowNumber = (rowNumber > 0 && rowNumber <= 8) ? rowNumber : 0;
         self.maxRowNumber = (self.rowNumber == 0) ? 8 : rowNumber;
         self.signSetting = signSetting;
+        self.minRowNumber = 0;
         [self commonInit];
     }
     return self;
@@ -244,6 +245,9 @@ static NSString * const numberCellText = @"0\n9\n8\n7\n6\n5\n4\n3\n2\n1\n0\n1\n2
 
 - (void)updateToRowNumber:(NSInteger)rowNumber {
     if (rowNumber == self.rowNumber) {
+        return;
+    }
+    if (rowNumber < self.minRowNumber) {
         return;
     }
     [self removeAllCellFromSuperview];
@@ -612,6 +616,13 @@ static NSString * const numberCellText = @"0\n9\n8\n7\n6\n5\n4\n3\n2\n1\n0\n1\n2
     
     return normalModulus * count * maxChangeNum;
     
+}
+
+#pragma mark - Setters
+
+- (void)setMinRowNumber:(NSUInteger)minRowNumber {
+    [self updateToRowNumber:minRowNumber];
+    _minRowNumber = minRowNumber;
 }
 
 #pragma mark - Getters

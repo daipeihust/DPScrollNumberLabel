@@ -11,7 +11,7 @@
 
 
 /**
- the setting option for SignSetting
+ The setting option for SignSetting
 
  - SignSettingUnsigned: only display positive number, default configuration is unsigned 
  - SignSettingNormal: negative numbers have negative sign but positive numbers don't have sign
@@ -28,12 +28,18 @@ typedef NS_ENUM(NSUInteger, SignSetting) {
 @interface DPScrollNumberLabel : UIView
 
 /**
- it synchronize with the value you set by method '-changeToNumber:animated:' and '-changeToNumber:interval:animated:'
+ It synchronize with the value you set by method '-changeToNumber:animated:' and '-changeToNumber:interval:animated:'
  */
 @property (nonatomic, strong, readonly)NSNumber *currentNumber;
 
 /**
- dynamic init method, the instance created by this method have a dynamic row count, it's row will change with the value you setting
+ This property control the minimum display row.
+ if set this property to 2, and currentNumber is 1, the display is 01
+ */
+@property (nonatomic, assign)NSUInteger minRowNumber;
+
+/**
+ Dynamic init method, the instance created by this method have a dynamic row count, it's row will change with the value you setting
 
  @param number: the initial number you want to display
  @param fontSize: the number font size you want
@@ -42,7 +48,7 @@ typedef NS_ENUM(NSUInteger, SignSetting) {
 - (instancetype)initWithNumber:(NSNumber *)number fontSize:(CGFloat)fontSize;
 
 /**
- dynamic init method, the instance created by this method have a dynamic row count, it's row will change with the value you setting
+ Dynamic init method, the instance created by this method have a dynamic row count, it's row will change with the value you setting
 
  @param number: the initial number you want to display
  @param fontSize: the number font size you want
@@ -52,7 +58,7 @@ typedef NS_ENUM(NSUInteger, SignSetting) {
 - (instancetype)initWithNumber:(NSNumber *)number fontSize:(CGFloat)fontSize textColor:(UIColor *)textColor;
 
 /**
- dynamic init method, the instance created by this method have a dynamic row count, it's row will change with the value you setting
+ Dynamic init method, the instance created by this method have a dynamic row count, it's row will change with the value you setting
 
  @param number: the initial number you want to display
  @param fontSize: the number font size you want
@@ -62,7 +68,7 @@ typedef NS_ENUM(NSUInteger, SignSetting) {
 - (instancetype)initWithNumber:(NSNumber *)number fontSize:(CGFloat)fontSize signSetting:(SignSetting)signSetting;
 
 /**
- dynamic init method, the instance created by this method have a dynamic row count, it's row will change with the value you setting
+ Dynamic init method, the instance created by this method have a dynamic row count, it's row will change with the value you setting
 
  @param number: the initial number you want to display
  @param fontSize: the number font size you want
@@ -73,7 +79,7 @@ typedef NS_ENUM(NSUInteger, SignSetting) {
 - (instancetype)initWithNumber:(NSNumber *)number fontSize:(CGFloat)fontSize textColor:(UIColor *)textColor signSetting:(SignSetting)signSetting;
 
 /**
- dynamic init method, the instance created by this method have a dynamic row count, it's row will change with the value you setting
+ Dynamic init method, the instance created by this method have a dynamic row count, it's row will change with the value you setting
 
  @param number: the initial number you want to display
  @param font: the number font you want
@@ -82,7 +88,7 @@ typedef NS_ENUM(NSUInteger, SignSetting) {
 - (instancetype)initWithNumber:(NSNumber *)number font:(UIFont *)font;
 
 /**
- dynamic init method, the instance created by this method have a dynamic row count, it's row will change with the value you setting
+ Dynamic init method, the instance created by this method have a dynamic row count, it's row will change with the value you setting
 
  @param number: the initial number you want to display
  @param font: the number font you want
@@ -92,7 +98,7 @@ typedef NS_ENUM(NSUInteger, SignSetting) {
 - (instancetype)initWithNumber:(NSNumber *)number font:(UIFont *)font textColor:(UIColor *)textColor;
 
 /**
- dynamic init method, the instance created by this method have a dynamic row count, it's row will change with the value you setting
+ Dynamic init method, the instance created by this method have a dynamic row count, it's row will change with the value you setting
 
  @param number: the initial number you want to display
  @param font: the number font you want
@@ -102,7 +108,7 @@ typedef NS_ENUM(NSUInteger, SignSetting) {
 - (instancetype)initWithNumber:(NSNumber *)number font:(UIFont *)font signSetting:(SignSetting)signSetting;
 
 /**
- dynamic init method, the instance created by this method have a dynamic row count, it's row will change with the value you setting
+ Dynamic init method, the instance created by this method have a dynamic row count, it's row will change with the value you setting
 
  @param number: the initial number you want to display
  @param font: the number font you want
@@ -113,18 +119,18 @@ typedef NS_ENUM(NSUInteger, SignSetting) {
 - (instancetype)initWithNumber:(NSNumber *)number font:(UIFont *)font textColor:(UIColor *)textColor signSetting:(SignSetting)signSetting;
 
 
-/*-------------------------------------------- dynamic init method end -------------------------------------------------
+/*-------------------------------------------- Dynamic init method end -------------------------------------------------
  
- if you set row number, the DPScrollNumberLabel instance's max num will less than the row num.
+ If you set row number, the DPScrollNumberLabel instance's max num will less than the row num.
  For example, you set row number to 1, then the max count of this label will be 9.
  
  Note:rowNumber shouldn't more than 8
  
- ---------------------------------------------- static init method start -----------------------------------------------*/
+ ---------------------------------------------- Static init method start -----------------------------------------------*/
 
 
 /**
- static init method, the instance created by this method have a comfirmed row count, 
+ Static init method, the instance created by this method have a comfirmed row count,
  if your value's row bigger than the comfirmed row, it won't have effect
 
  @param number: the initial number you want to display
@@ -137,7 +143,7 @@ typedef NS_ENUM(NSUInteger, SignSetting) {
                      rowNumber:(NSUInteger)rowNumber;
 
 /**
- static init method, the instance created by this method have a comfirmed row count, 
+ Static init method, the instance created by this method have a comfirmed row count,
  if your value's row bigger than the comfirmed row, it won't have effect
 
  @param number: the initial number you want to display
@@ -152,7 +158,7 @@ typedef NS_ENUM(NSUInteger, SignSetting) {
                      rowNumber:(NSUInteger)rowNumber;
 
 /**
- static init method, the instance created by this method have a comfirmed row count, 
+ Static init method, the instance created by this method have a comfirmed row count,
  if your value's row bigger than the comfirmed row, it won't have effect
 
  @param number: the initial number you want to display
@@ -167,7 +173,7 @@ typedef NS_ENUM(NSUInteger, SignSetting) {
                      rowNumber:(NSUInteger)rowNumber;
 
 /**
- static init method, the instance created by this method have a comfirmed row count, 
+ Static init method, the instance created by this method have a comfirmed row count,
  if your value's row bigger than the comfirmed row, it won't have effect
 
  @param number: the initial number you want to display
@@ -184,7 +190,7 @@ typedef NS_ENUM(NSUInteger, SignSetting) {
                      rowNumber:(NSUInteger)rowNumber;
 
 /**
- static init method, the instance created by this method have a comfirmed row count, 
+ Static init method, the instance created by this method have a comfirmed row count,
  if your value's row bigger than the comfirmed row, it won't have effect
 
  @param number: the initial number you want to display
@@ -199,7 +205,7 @@ typedef NS_ENUM(NSUInteger, SignSetting) {
                      rowNumber:(NSUInteger)rowNumber;
 
 /**
- static init method, the instance created by this method have a comfirmed row count, 
+ Static init method, the instance created by this method have a comfirmed row count,
  if your value's row bigger than the comfirmed row, it won't have effect
 
  @param number: the initial number you want to display
@@ -214,7 +220,7 @@ typedef NS_ENUM(NSUInteger, SignSetting) {
                      rowNumber:(NSUInteger)rowNumber;
 
 /**
- static init method, the instance created by this method have a comfirmed row count, 
+ Static init method, the instance created by this method have a comfirmed row count, 
  if your value's row bigger than the comfirmed row, it won't have effect
 
  @param number: the initial number you want to display
