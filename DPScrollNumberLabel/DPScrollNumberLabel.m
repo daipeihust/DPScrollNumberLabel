@@ -63,7 +63,6 @@ static NSString * const numberCellText = @"0\n9\n8\n7\n6\n5\n4\n3\n2\n1\n0\n1\n2
 @property (nonatomic, strong) NSNumber                      *targetNumber;
 @property (nonatomic, strong) NSMutableArray<UILabel *>     *cellArray;
 @property (nonatomic, strong) UILabel                       *signCell;
-@property (nonatomic, assign) CGFloat                       fontSize;
 @property (nonatomic, assign) NSUInteger                    rowNumber;
 @property (nonatomic, strong) NSMutableArray                *taskQueue;
 @property (nonatomic, assign) BOOL                          isAnimating;
@@ -72,8 +71,6 @@ static NSString * const numberCellText = @"0\n9\n8\n7\n6\n5\n4\n3\n2\n1\n0\n1\n2
 @property (nonatomic, assign) CGFloat                       signCellHeight;
 @property (nonatomic, assign) NSInteger                     finishedAnimationCount;
 @property (nonatomic, assign) NSUInteger                    maxRowNumber;
-@property (nonatomic, strong) UIColor                       *textColor;
-@property (nonatomic, strong) UIFont                        *font;
 @property (nonatomic, assign) SignSetting                   signSetting;
 @property (nonatomic, assign) NSUInteger                    signRow;
 @property (nonatomic, assign) BOOL							fixedRowNumber;
@@ -623,7 +620,23 @@ static NSString * const numberCellText = @"0\n9\n8\n7\n6\n5\n4\n3\n2\n1\n0\n1\n2
     
 }
 
-#pragma mark - Getters
+#pragma mark - Getters & Setters
+
+- (void)setTextColor:(UIColor *)textColor {
+	_textColor = textColor;
+	[self.cellArray enumerateObjectsUsingBlock:^(UILabel * _Nonnull label, NSUInteger idx, BOOL * _Nonnull stop) {
+		label.textColor = textColor;
+	}];
+	self.signCell.textColor = textColor;
+}
+
+- (void)setFont:(UIFont *)font {
+	_font = font;
+	[self.cellArray enumerateObjectsUsingBlock:^(UILabel * _Nonnull label, NSUInteger idx, BOOL * _Nonnull stop) {
+		label.font = font;
+	}];
+	self.signCell.font = font;
+}
 
 - (UILabel *)makeNumberCell {
     UILabel *cell = [[UILabel alloc] init];

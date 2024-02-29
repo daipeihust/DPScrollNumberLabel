@@ -30,7 +30,11 @@ typedef NS_ENUM(NSUInteger, SignSetting) {
 /**
  it synchronize with the value you set by method '-changeToNumber:animated:' and '-changeToNumber:interval:animated:'
  */
-@property (nonatomic, strong, readonly)NSNumber *currentNumber;
+@property (nonatomic, strong, readonly) NSNumber *currentNumber;
+
+@property (nonatomic, strong) UIFont *font;
+
+@property (nonatomic, strong) UIColor *textColor;
 
 /**
  dynamic init method, the instance created by this method have a dynamic row count, it's row will change with the value you setting
@@ -39,7 +43,7 @@ typedef NS_ENUM(NSUInteger, SignSetting) {
  @param fontSize: the number font size you want
  @return the instance of DPScrollNumberLabel
  */
-- (instancetype)initWithNumber:(NSNumber *)number fontSize:(CGFloat)fontSize;
+-  (nonnull instancetype)initWithNumber:(NSNumber *)number fontSize:(CGFloat)fontSize;
 
 /**
  dynamic init method, the instance created by this method have a dynamic row count, it's row will change with the value you setting
@@ -49,7 +53,7 @@ typedef NS_ENUM(NSUInteger, SignSetting) {
  @param textColor: the number color you want
  @return the instance of DPScrollNumberLabel
  */
-- (instancetype)initWithNumber:(NSNumber *)number fontSize:(CGFloat)fontSize textColor:(UIColor *)textColor;
+-  (nonnull instancetype)initWithNumber:(NSNumber *)number fontSize:(CGFloat)fontSize textColor:(UIColor *)textColor;
 
 /**
  dynamic init method, the instance created by this method have a dynamic row count, it's row will change with the value you setting
@@ -59,7 +63,7 @@ typedef NS_ENUM(NSUInteger, SignSetting) {
  @param signSetting: the sign setting for DPScrollNumberLabel, you have three option: unsigned, normal, signed. see SignSetting enum declaration for detail.
  @return the instance of DPScrollNumberLabel
  */
-- (instancetype)initWithNumber:(NSNumber *)number fontSize:(CGFloat)fontSize signSetting:(SignSetting)signSetting;
+-  (nonnull instancetype)initWithNumber:(NSNumber *)number fontSize:(CGFloat)fontSize signSetting:(SignSetting)signSetting;
 
 /**
  dynamic init method, the instance created by this method have a dynamic row count, it's row will change with the value you setting
@@ -70,7 +74,7 @@ typedef NS_ENUM(NSUInteger, SignSetting) {
  @param signSetting: the sign setting for DPScrollNumberLabel, you have three option: unsigned, normal, signed. see SignSetting enum declaration for detail.
  @return the instance of DPScrollNumberLabel
  */
-- (instancetype)initWithNumber:(NSNumber *)number fontSize:(CGFloat)fontSize textColor:(UIColor *)textColor signSetting:(SignSetting)signSetting;
+-  (nonnull instancetype)initWithNumber:(NSNumber *)number fontSize:(CGFloat)fontSize textColor:(UIColor *)textColor signSetting:(SignSetting)signSetting;
 
 /**
  dynamic init method, the instance created by this method have a dynamic row count, it's row will change with the value you setting
@@ -79,7 +83,7 @@ typedef NS_ENUM(NSUInteger, SignSetting) {
  @param font: the number font you want
  @return the instance of DPScrollNumberLabel
  */
-- (instancetype)initWithNumber:(NSNumber *)number font:(UIFont *)font;
+-  (nonnull instancetype)initWithNumber:(NSNumber *)number font:(UIFont *)font;
 
 /**
  dynamic init method, the instance created by this method have a dynamic row count, it's row will change with the value you setting
@@ -89,7 +93,7 @@ typedef NS_ENUM(NSUInteger, SignSetting) {
  @param textColor: the number color you want
  @return the instance of DPScrollNumberLabel
  */
-- (instancetype)initWithNumber:(NSNumber *)number font:(UIFont *)font textColor:(UIColor *)textColor;
+-  (nonnull instancetype)initWithNumber:(NSNumber *)number font:(UIFont *)font textColor:(UIColor *)textColor;
 
 /**
  dynamic init method, the instance created by this method have a dynamic row count, it's row will change with the value you setting
@@ -99,7 +103,7 @@ typedef NS_ENUM(NSUInteger, SignSetting) {
  @param signSetting: the sign setting for DPScrollNumberLabel, you have three option: unsigned, normal, signed. see SignSetting enum declaration for detail.
  @return the instance of DPScrollNumberLabel
  */
-- (instancetype)initWithNumber:(NSNumber *)number font:(UIFont *)font signSetting:(SignSetting)signSetting;
+-  (nonnull instancetype)initWithNumber:(NSNumber *)number font:(UIFont *)font signSetting:(SignSetting)signSetting;
 
 /**
  dynamic init method, the instance created by this method have a dynamic row count, it's row will change with the value you setting
@@ -110,7 +114,7 @@ typedef NS_ENUM(NSUInteger, SignSetting) {
  @param signSetting: the sign setting for DPScrollNumberLabel, you have three option: unsigned, normal, signed. see SignSetting enum declaration for detail.
  @return the instance of DPScrollNumberLabel
  */
-- (instancetype)initWithNumber:(NSNumber *)number font:(UIFont *)font textColor:(UIColor *)textColor signSetting:(SignSetting)signSetting;
+-  (nonnull instancetype)initWithNumber:(NSNumber *)number font:(UIFont *)font textColor:(UIColor *)textColor signSetting:(SignSetting)signSetting;
 
 
 /*-------------------------------------------- dynamic init method end -------------------------------------------------
@@ -132,7 +136,7 @@ typedef NS_ENUM(NSUInteger, SignSetting) {
  @param rowNumber: the row count of DPScrollNumberLabel, it means the row count will be changeless
  @return the instance of DPScrollNumberLabel
  */
-- (instancetype)initWithNumber:(NSNumber *)number
+-  (nonnull instancetype)initWithNumber:(NSNumber *)number
                       fontSize:(CGFloat)fontSize
                      rowNumber:(NSUInteger)rowNumber;
 
@@ -146,7 +150,7 @@ typedef NS_ENUM(NSUInteger, SignSetting) {
  @param rowNumber: the row count of DPScrollNumberLabel, it means the row count will be changeless
  @return the instance of DPScrollNumberLabel
  */
-- (instancetype)initWithNumber:(NSNumber *)number
+-  (nonnull instancetype)initWithNumber:(NSNumber *)number
                       fontSize:(CGFloat)fontSize
                      textColor:(UIColor *)textColor
                      rowNumber:(NSUInteger)rowNumber;
@@ -161,7 +165,7 @@ typedef NS_ENUM(NSUInteger, SignSetting) {
  @param rowNumber: the row count of DPScrollNumberLabel, it means the row count will be changeless
  @return the instance of DPScrollNumberLabel
  */
-- (instancetype)initWithNumber:(NSNumber *)number
+-  (nonnull instancetype)initWithNumber:(NSNumber *)number
                       fontSize:(CGFloat)fontSize
                       signSetting:(SignSetting)signSetting
                      rowNumber:(NSUInteger)rowNumber;
@@ -177,7 +181,7 @@ typedef NS_ENUM(NSUInteger, SignSetting) {
  @param rowNumber: the row count of DPScrollNumberLabel, it means the row count will be changeless
  @return the instance of DPScrollNumberLabel
  */
-- (instancetype)initWithNumber:(NSNumber *)number
+-  (nonnull instancetype)initWithNumber:(NSNumber *)number
                       fontSize:(CGFloat)fontSize
                      textColor:(UIColor *)textColor
                       signSetting:(SignSetting)signSetting
@@ -193,7 +197,7 @@ typedef NS_ENUM(NSUInteger, SignSetting) {
  @param rowNumber: the row count of DPScrollNumberLabel, it means the row count will be changeless
  @return the instance of DPScrollNumberLabel
  */
-- (instancetype)initWithNumber:(NSNumber *)number
+-  (nonnull instancetype)initWithNumber:(NSNumber *)number
                           font:(UIFont *)font
                      textColor:(UIColor *)textColor
                      rowNumber:(NSUInteger)rowNumber;
@@ -208,7 +212,7 @@ typedef NS_ENUM(NSUInteger, SignSetting) {
  @param rowNumber: the row count of DPScrollNumberLabel, it means the row count will be changeless
  @return the instance of DPScrollNumberLabel
  */
-- (instancetype)initWithNumber:(NSNumber *)number
+-  (nonnull instancetype)initWithNumber:(NSNumber *)number
                           font:(UIFont *)font
                       signSetting:(SignSetting)signSetting
                      rowNumber:(NSUInteger)rowNumber;
@@ -224,7 +228,7 @@ typedef NS_ENUM(NSUInteger, SignSetting) {
  @param rowNumber: the row count of DPScrollNumberLabel, it means the row count will be changeless
  @return the instance of DPScrollNumberLabel
  */
-- (instancetype)initWithNumber:(NSNumber *)number
+-  (nonnull instancetype)initWithNumber:(NSNumber *)number
                           font:(UIFont *)font
                      textColor:(UIColor *)textColor
                       signSetting:(SignSetting)signSetting
